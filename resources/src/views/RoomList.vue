@@ -7,7 +7,8 @@
       <div v-for="(hotel, index) in hotels" :key="hotel.id" class="px-5 mb-5">
         <div class="max-w-sm rounded overflow-hidden shadow-lg">
           <!-- gambar dari unsplash -->
-          <img v-if="photos[index]" :src="photos[index].urls.small" :alt="photos[index].alt_description" class="w-full h-40 object-cover rounded-md">
+          <img v-if="photos[index]" :src="photos[index].urls.small" :alt="photos[index].alt_description"
+            class="w-full h-40 object-cover rounded-md">
           <div class="px-6 pt-4 pb-2">
             <div class="font-bold text-xl mb-2 text-gray-600">{{ hotel.name }}</div>
             <p class="text-gray-700 text-base">
@@ -28,15 +29,14 @@ import axios from 'axios'
 
 // state
 const hotels = ref([])
-const photos = ref([]) // simpan gambar unsplash
+const photos = ref([])
 
-// Unsplash API key
-const ACCESS_KEY = 'ZKZOPEf5308spp9gsOPMCfXdw5lwFqmemPYnoiu65LY'
-
-// lifecycle
 onMounted(async () => {
   try {
-    // fetch hotel dari backend
+    const configRes = await api.get('/config')
+    let ACCESS_KEY = configRes.data.unsplash_access_key
+
+    // fetch hotel
     const response = await api.get("/hotels")
     hotels.value = response.data.data
 

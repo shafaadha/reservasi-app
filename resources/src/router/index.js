@@ -4,6 +4,7 @@ import RoomList from "../views/RoomList.vue";
 import MyReservation from "../views/MyReservation.vue";
 import Register from "../views/Register.vue";
 import About from "../views/About.vue";
+import Home from "../views/Home.vue";
 
 
 const routes = [
@@ -12,6 +13,7 @@ const routes = [
     { path: "/rooms", name: "rooms", component: RoomList },
     { path: "/reservations", component: MyReservation },
     { path: "/about", component: About },
+    { path: "/home", component: Home}
 ];
 
 const router = createRouter({

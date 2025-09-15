@@ -15,4 +15,10 @@ Route::post('/login', [AuthController::class,'login']);
 Route::post('/logout', [AuthController::class,'logout']);
 Route::get('/hotels', [HotelController::class,'index']);
 
+Route::get('/config', function(){
+    return response()->json([
+        'unsplash_access_key'=>env('UNSPLASH_ACCESS_KEY'),
+    ]
+    );
+});
 Route::apiResource('reservations', ReservationController::class);

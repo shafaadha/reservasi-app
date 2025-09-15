@@ -12,4 +12,7 @@ export default defineConfig({
         tailwindcss(),
         vue(),
     ],
+    define:{
+        'process.env': process.env
+    }
 });
