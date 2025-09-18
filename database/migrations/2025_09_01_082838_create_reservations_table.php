@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('check_in');
             $table->date('check_out');
             $table->integer('guests')->default(1);
+            $table->integer('room_booked')->default(1);
             $table->decimal('total_price', 12, 2);
             $table->string('status')->default('pending');
             $table->timestamps();

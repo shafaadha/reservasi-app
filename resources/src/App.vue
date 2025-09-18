@@ -32,21 +32,21 @@ async function logout() {
 </script>
 
 <template>
-  <div class="navigator mb-10 bg-blue-500 text-white p-4 rounded-b-lg shadow flex items-center justify-between">
+  <div class="navigator bg-cyan-400 text-white p-4 rounded-b-lg shadow flex items-center justify-between">
     <div>
-      <RouterLink to="/home" class="text-2xl font-bold">Reservasi Hotel</RouterLink>
+      <RouterLink to="/" class="text-2xl font-bold">Reservasi Hotel</RouterLink>
     </div>
-    <ul class="flex items-center space-x-6">
-      <li>
-        <RouterLink to="/rooms">Room</RouterLink>
+    <ul class="flex items-center space-x-2">
+      <li class="hover:bg-cyan-600 rounded-md">
+        <RouterLink to="/rooms" class="block px-4 py-2" active-class="bg-cyan-600 rounded-md">Room</RouterLink>
       </li>
-      <li>
-        <RouterLink to="/about">About us</RouterLink>
+      <li class="hover:bg-cyan-700 hover:rounded-md">
+        <RouterLink to="/about" class="block px-4 py-2" active-class="bg-cyan-700 rounded-md">About us</RouterLink>
       </li>
-      <li v-if="!isLoggedIn">
-        <RouterLink to="/login">Login</RouterLink>
+      <li v-if="!isLoggedIn" class="hover:bg-cyan-600 hover:rounded-md">
+        <RouterLink to="/login" class="block px-4 py-2" active-class="bg-cyan-600 rounded-md">Login</RouterLink>
       </li>
-      <li v-else>
+      <li v-else class="hover:bg-cyan-600 hover:rounded-md">
         <button v-on:click="logout">Logout</button>
       </li>
     </ul>

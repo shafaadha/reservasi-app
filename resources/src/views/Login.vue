@@ -75,7 +75,7 @@ export default {
         localStorage.setItem("token", res.data.token);
         window.dispatchEvent(new Event("login-success"));
 
-        this.$router.push({ name: "hotels" });
+        this.$router.push({ name: "home" });
       } catch (err) {
         this.errorMessages = "Email atau password salah!";
       } finally {
