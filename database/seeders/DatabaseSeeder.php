@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\hotel;
+use App\Models\Room;
 use Database\Factories\HotelFactory;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -22,9 +23,13 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         $this->call([
-            UserSeeder::class
+            UserSeeder::class,
+            RoomSeeder::class
 
         ]);
-        Hotel::factory(10)->create();
+        Hotel::factory()
+            ->count(10) // bikin 10 hotel
+            ->has(Room::factory()->count(3)) // tiap hotel punya 3 room
+            ->create();
     }
 }

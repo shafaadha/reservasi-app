@@ -1,6 +1,7 @@
 import "../src/assets/main.css"
 import '../css/app.css'
 import { createApp } from "vue";
+import {createPinia} from 'pinia';
 import PrimeVue from "primevue/config";
 import Aura from '@primeuix/themes/aura';
 import App from "../src/App.vue";
@@ -16,6 +17,7 @@ app.use(PrimeVue, {
         preset: Aura,
     }
 });
+app.use(createPinia());
 app.component('Button', Button)
 app.component('InputText', InputText);
 app.mount('#app');
