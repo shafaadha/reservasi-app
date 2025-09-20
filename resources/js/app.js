@@ -8,6 +8,7 @@ import App from "../src/App.vue";
 import router from "../src/router/index.js";
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
+import * as HeroIconsOutline from '@heroicons/vue/24/outline'
 
 
 const app = createApp(App);
@@ -21,3 +22,6 @@ app.use(createPinia());
 app.component('Button', Button)
 app.component('InputText', InputText);
 app.mount('#app');
+for (const [key, component] of Object.entries(HeroIconsOutline)) {
+  app.component(key, component)
+}
