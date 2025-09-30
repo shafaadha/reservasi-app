@@ -13,8 +13,19 @@ const routes = [
     { path: "/rooms", name: "rooms", component: RoomList },
     { path: "/reservations", component: MyReservation },
     { path: "/about", component: About },
-    { path: "/",name:"home", component: Home},
-    { path: "/rooms/avail",name:"available-room", component: Available}
+    { path: "/", name: "home", component: Home },
+    { path: "/rooms/avail", name: "available-room", component: Available },
+    {
+        path: "/booking",
+        name: "BookingPage",
+        component: BookingPage,
+        props: (route) => ({
+            roomId: route.query.roomId,
+            checkin: route.query.checkin,
+            checkout: route.query.checkout,
+            guest: route.query.guest,
+        }),
+    },
 ];
 
 const router = createRouter({
