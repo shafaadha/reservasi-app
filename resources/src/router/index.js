@@ -6,6 +6,7 @@ import Register from "../views/Register.vue";
 import About from "../views/About.vue";
 import Home from "../views/Home.vue";
 import Available from "../views/Available.vue";
+import BookingPage from "../views/BookingPage.vue";
 
 const routes = [
     { path: "/login", name: "login", component: Login },

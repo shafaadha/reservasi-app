@@ -47,7 +47,7 @@
 
 <script>
 
-import api, { setAuthToken } from "../services/api"; // pakai axios instance
+import api, { setAuthToken } from "../services/api";
 import { errorMessages } from "vue/compiler-sfc";
 
 export default {
@@ -68,9 +68,6 @@ export default {
           email: this.email,
           password: this.password,
         });
-
-        console.log("Email:", this.email);
-        console.log("Password:", this.password);
 
         localStorage.setItem("token", res.data.token);
         window.dispatchEvent(new Event("login-success"));

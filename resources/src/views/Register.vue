@@ -58,10 +58,10 @@
 
 <script>
 import { errorMessages } from "vue/compiler-sfc";
-import api, { setAuthToken } from "../services/api"; // pakai axios instance
+import api, { setAuthToken } from "../services/api";
 
 export default {
-    name: "Login",
+    name: "Register",
     data() {
         return {
             name: "",
