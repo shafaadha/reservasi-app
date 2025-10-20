@@ -11,11 +11,15 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+// Authentication Routes
 Route::post('/register', [AuthController::class,'register']);
 Route::post('/login', [AuthController::class,'login']);
 Route::post('/logout', [AuthController::class,'logout']);
+
+// Hotel Routes
 Route::get('/hotels', [HotelController::class,'index']);
 
+//dummy unsplash access key route
 Route::get('/config', function(){
     return response()->json([
         'unsplash_access_key'=>env('UNSPLASH_ACCESS_KEY'),

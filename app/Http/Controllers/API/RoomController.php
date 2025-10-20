@@ -23,16 +23,37 @@ class RoomController extends Controller
         $guest    = $request->guest;
         $roomNeed = $request->room;
 
-        // Ambil semua kamar
+        if (strtotime($checkout) <= strtotime($checkin)) {
+            return response()->json([
+                'message' => 'Tanggal check-out harus setelah tanggal check-in.'
+            ], 422);
+        }
+
+        if(strtotime($checkin) < strtotime(date('Y-m-d'))){
+            return response()->json([
+                'message' => 'Tanggal check-in harus hari ini atau setelahnya.'
+            ], 422);
+        }
+
+        if ($guest < 1) {
+            return response()->json([
+                'message' => 'Jumlah tamu harus minimal 1.'
+            ], 422);
+        }
+
+        if ($roomNeed < 1) {
+            return response()->json([
+                'message' => 'Jumlah kamar yang dibutuhkan harus minimal 1.'
+            ], 422);
+        }
+
         $rooms = Room::all();
 
         $availableRooms = $rooms->filter(function ($room) use ($checkin, $checkout, $guest, $roomNeed) {
-            // Skip kalau kapasitas per kamar kurang dari guest
             if ($room->capacity < $guest) {
                 return false;
             }
 
-            // Hitung jumlah kamar yang sudah dibooking di range tanggal
             $bookedCount = Reservation::where('room_id', $room->id)
                 ->where(function ($query) use ($checkin, $checkout) {
                     $query->whereBetween('check_in', [$checkin, $checkout])
