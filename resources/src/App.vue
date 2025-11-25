@@ -38,7 +38,7 @@ async function logout() {
     </div>
     <ul class="flex items-center space-x-2">
       <li class="hover:bg-cyan-600 rounded-md">
-        <RouterLink to="/rooms" class="block px-4 py-2" active-class="bg-cyan-600 rounded-md">Room</RouterLink>
+        <RouterLink to="/rooms" class="block px-4 py-2" active-class="bg-cyan-700 rounded-md">Room</RouterLink>
       </li>
       <li class="hover:bg-cyan-700 hover:rounded-md">
         <RouterLink to="/about" class="block px-4 py-2" active-class="bg-cyan-700 rounded-md">About us</RouterLink>
