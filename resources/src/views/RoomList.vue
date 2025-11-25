@@ -2,10 +2,8 @@
   <div>
     <div class="text-gray-700 px-5 mb-5 mt-5 font-bold text-2xl">Hotel List</div>
 
-    <!-- Looping hotel -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-2 justify-items-center">
 
-      <!-- Kalau loading, tampilkan skeleton -->
       <template v-if="loading">
         <div v-for="n in 6" :key="n" class="px-5 mb-5 w-full">
           <div class="max-w-sm rounded overflow-hidden shadow-lg animate-pulse">
@@ -19,11 +17,10 @@
         </div>
       </template>
 
-      <!-- Kalau sudah dapat data -->
       <template v-else>
-        <div v-for="(hotel, index) in hotels" :key="hotel.id" class="px-5 mb-5">
-          <div class="max-w-sm rounded overflow-hidden shadow-lg">
-            <!-- gambar dari unsplash -->
+        <div v-for="(hotel, index) in hotels" :key="hotel.id" class="px-5 mb-5 shadow-sm hover:shadow-md transition-shadow rounded-lg">
+          <div class="max-w-sm rounded overflow-hidden">
+
             <img v-if="photos[index]" :src="photos[index].urls.small" :alt="photos[index].alt_description"
               class="w-full h-40 object-cover rounded-md">
             <div class="px-6 pt-4 pb-2">
@@ -46,7 +43,6 @@ import { ref, onMounted } from 'vue'
 import api from '../services/api'
 import axios from 'axios'
 
-// state
 const hotels = ref([])
 const photos = ref([])
 const loading = ref(true)
@@ -56,11 +52,9 @@ onMounted(async () => {
     const configRes = await api.get('/config')
     let ACCESS_KEY = configRes.data.unsplash_access_key
 
-    // fetch hotel
     const response = await api.get("/hotels")
     hotels.value = response.data.data
 
-    // fetch photo dari unsplash
     const res = await axios.get('https://api.unsplash.com/search/photos', {
       params: { query: 'hotel', per_page: 12 },
       headers: { Authorization: `Client-ID ${ACCESS_KEY}` }
