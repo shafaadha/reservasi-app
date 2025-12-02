@@ -44,7 +44,7 @@ const features = [
 
         <!-- Features -->
         <div class="mt-16">
-            <h2 class="text-center text-2xl font-bold mb-6">Mengapa Memilih Kami?</h2>
+            <h2 class="text-center text-2xl font-bold mb-6">Why you choose us?</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div v-for="(feature, index) in features" :key="index"

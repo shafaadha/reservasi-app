@@ -10,3 +10,23 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
+.slider-thumb::-webkit-slider-thumb {
+    pointer-events: auto;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #1d4ed8; /* blue-600 */
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.slider-thumb::-moz-range-thumb {
+    pointer-events: auto;
+    width: 16px;
+    height: 16px;
+    background: #1d4ed8;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+

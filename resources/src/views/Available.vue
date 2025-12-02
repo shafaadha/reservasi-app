@@ -1,8 +1,10 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import api from "../services/api";
 import axios from "axios";
+import PriceRangeSlider from "../component/PriceRangeSlider.vue";
+import CategoryFilter from "../component/CategoryFilter.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -10,6 +12,34 @@ const router = useRouter();
 const photos = ref([]);
 const rooms = ref([]);
 const loading = ref(true);
+const selectedCategories = ref([]);
+
+const priceRange = ref({
+    min: 0,
+    max: 3000000
+})
+
+const filteredRooms = computed(() => {
+    return rooms.value.filter(room => {
+        const price = Number(room.price);
+
+        const matchPrice =
+            price >= priceRange.value.min &&
+            price <= priceRange.value.max;
+
+        const matchCategory =
+            selectedCategories.value.length === 0 ||
+            selectedCategories.value.includes(room.type);
+
+        return matchPrice && matchCategory;
+    });
+});
+
+
+const roomCategories = computed(() => {
+    const types = rooms.value.map(r => r.type);
+    return [...new Set(types)];
+});
 
 
 onMounted(async () => {
@@ -31,7 +61,7 @@ onMounted(async () => {
 
         // fetch photo
         const res = await axios.get("https://api.unsplash.com/search/photos", {
-            params: { query: "hotel", per_page: 12 },
+            params: { query: "hotel", per_page: 100 },
             headers: { Authorization: `Client-ID ${ACCESS_KEY}` },
         });
         photos.value = res.data.results;
@@ -63,19 +93,17 @@ const reservation = (room) => {
             <!-- Sidebar -->
             <aside class="md:col-span-1 bg-white shadow rounded p-4 h-fit">
                 <h2 class="text-lg font-semibold mb-3">Filter</h2>
-                <div class="space-y-2">
-                    <p class="text-sm text-gray-600">Fitur lain di sini nanti...</p>
-                    <!-- contoh: filter harga, tipe kamar, tanggal -->
-                    <!-- <input type="date" class="w-full border rounded px-2 py-1" /> -->
-                </div>
+                <PriceRangeSlider v-model="priceRange" :minLimit="0" :maxLimit="3000000" :gap="50000" :step="10000" />
+                <CategoryFilter class="mt-4" v-model="selectedCategories" :categories="roomCategories" />
+
             </aside>
 
             <!-- Main Content -->
             <main class="md:col-span-3">
                 <h1 class="text-2xl font-bold mb-5 text-center">Daftar Kamar Tersedia</h1>
 
-                <div v-if="rooms.length">
-                    <div v-for="(room, index) in rooms" :key="room.id"
+                <div v-if="filteredRooms.length">
+                    <div v-for="(room, index) in filteredRooms" :key="room.id"
                         class="flex flex-col md:flex-row justify-between items-center border border-gray-200 rounded p-4 mb-3 shadow-sm hover:shadow-md transition-shadow duration-200">
                         <img v-if="photos[index]" :src="photos[index].urls.small" :alt="photos[index].alt_description"
                             class="w-48 h-32 object-cover rounded-md mb-3 md:mb-0 md:mr-4" />
