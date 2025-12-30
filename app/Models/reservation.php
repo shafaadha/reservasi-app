@@ -6,16 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reservation extends Model
 {
-    protected $fillable = ['name', 'email', 'date', 'time', 'guests'];
+    protected $fillable = [
+        'user_id',
+        'hotel_id',
+        'room_id',
+        'check_in',
+        'check_out',
+        'guests',
+        'room_booked',
+        'total_price',
+        'status',
+    ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-    public function room(){
+    public function room()
+    {
         return $this->belongsTo(Room::class);
     }
-    public function hotel(){
+    public function hotel()
+    {
         return $this->belongsTo(Hotel::class);
     }
-
 }

@@ -28,4 +28,8 @@ Route::get('/config', function(){
 });
 Route::post('/room/check-availability', [RoomController::class, 'checkAvailability']);
 
-Route::apiResource('reservations', ReservationController::class);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/reservations', [ReservationController::class, 'store']);
+    Route::get('/my-reservations', [ReservationController::class, 'myReservations']);
+});
+
