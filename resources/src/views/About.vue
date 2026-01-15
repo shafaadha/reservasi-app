@@ -28,7 +28,7 @@ const features = [
 <template>
     <div class="max-w-6xl mx-auto px-6 py-12">
         <div class="text-center mb-16">
-            <h2 class="text-blue-600 mb-4 font-medium">Tentang Kami</h2>
+            <h2 class="text-blue-600 mb-4 font-medium">About Us</h2>
             <p className="text-gray-600 max-w-3xl mx-auto">
                 Grand Haven Hotel has been a beacon of luxury and hospitality for over 50 years.
                 We pride ourselves on delivering exceptional experiences that combine timeless elegance
