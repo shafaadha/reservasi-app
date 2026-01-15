@@ -1,6 +1,5 @@
 <template>
     <div class="w-full min-h-screen bg">
-        <!-- Hero Section dengan gambar -->
         <div class="relative h-80">
             <img src="../assets/picture/home.jpg" alt="home"
                 class="absolute inset-0 w-full h-full object-cover opacity-75">
