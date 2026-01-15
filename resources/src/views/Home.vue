@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="w-full min-h-screen bg">
         <!-- Hero Section dengan gambar -->
         <div class="relative h-80">
             <img src="../assets/picture/home.jpg" alt="home"
@@ -23,7 +23,7 @@
                     <div class="col-span-1 sm:col-span-2 flex flex-col space-y-1">
                         <label for="checkout" class="text-gray-800 font-medium">Check Out</label>
                         <input v-model="checkout" type="date" id="checkout"
-                            class="w-full h-12 px-4 rounded-md border border-gray-300" :min="today">
+                            class="w-full h-12 px-4 rounded-md border border-gray-300" :min="checkin || today">
                     </div>
 
                     <!-- Guest -->
@@ -118,3 +118,6 @@ export default {
     },
 };
 </script>
+<style scoped>
+
+</style>
