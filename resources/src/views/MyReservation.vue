@@ -1,18 +1,12 @@
 <template>
     <section class="max-w-3xl mx-auto p-6">
         <h1 class="text-2xl font-semibold mb-4">My Reservations</h1>
-
-        <!-- Loading -->
         <div v-if="loading" class="text-gray-500">
             Loading reservations...
         </div>
-
-        <!-- Empty -->
         <div v-else-if="!hotels || hotels.length === 0" class="text-gray-500">
             Tidak ada reservasi
         </div>
-
-        <!-- List -->
         <div v-else class="space-y-4">
             <div
                 v-for="reservation in hotels"

@@ -38,7 +38,12 @@ const routes = [
         name: "confirmation",
         component: BookingConfirmation,
     },
-    { path: "/my-reservations", name: "myReser", component: MyReservation, meta: {requiresAuth: true}},
+    {
+        path: "/my-reservations",
+        name: "myReser",
+        component: MyReservation,
+        meta: { requiresAuth: true },
+    },
 ];
 
 const router = createRouter({
