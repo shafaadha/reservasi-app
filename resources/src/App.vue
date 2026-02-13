@@ -1,20 +1,22 @@
 <script setup>
-import AppFooter from "./component/AppFooter.vue";
-import Navigator from "./component/Navigator.vue";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+
+import AdminLayout from "./layouts/AdminLayout.vue";
+import UserLayout from "./layouts/UserLayout.vue";
 import { setAuthToken } from "./services/api";
+
+const route = useRoute();
 
 const token = localStorage.getItem("token");
 if (token) {
-    setAuthToken(token);
+  setAuthToken(token);
 }
+
+const layout = computed(() => route.meta.layout || "user");
 </script>
 
 <template>
-    <Navigator></Navigator>
-    <div id="app">
-        <router-view />
-    </div>
-    <AppFooter></AppFooter>
+  <AdminLayout v-if="layout === 'admin'" />
+  <UserLayout v-else />
 </template>
-
-<style></style>
