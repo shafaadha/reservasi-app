@@ -8,6 +8,8 @@ import Home from "../views/Home.vue";
 import Available from "../views/Available.vue";
 import BookingPage from "../views/BookingPage.vue";
 import BookingConfirmation from "../views/BookingConfirmation.vue";
+import { Layout } from "lucide-vue-next";
+import DashboardPage from "../views/Admin/DashboardPage.vue";
 
 const routes = [
     { path: "/login", name: "login", component: Login },
@@ -16,16 +18,21 @@ const routes = [
     {
         path: "/reservations",
         component: MyReservation,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, layout: "user" },
     },
-    { path: "/about", component: About },
-    { path: "/", name: "home", component: Home },
-    { path: "/rooms/avail", name: "available-room", component: Available },
+    { path: "/about", component: About, meta: { layout: "user" } },
+    { path: "/", name: "home", component: Home, meta: { layout: "user" } },
+    {
+        path: "/rooms/avail",
+        name: "available-room",
+        component: Available,
+        meta: { layout: "user" },
+    },
     {
         path: "/booking",
         name: "BookingPage",
         component: BookingPage,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, layout: "user" },
         props: (route) => ({
             roomId: route.query.roomId,
             checkin: route.query.checkin,
@@ -42,7 +49,13 @@ const routes = [
         path: "/my-reservations",
         name: "myReser",
         component: MyReservation,
-        meta: { requiresAuth: true },
+        meta: { requiresAuth: true, layout: "user" },
+    },
+    {
+        path: "/admin",
+        name: "admin",
+        component: DashboardPage,
+        meta: { requiresAuth: true, layout: "admin" },
     },
 ];
 

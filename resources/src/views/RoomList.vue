@@ -8,17 +8,13 @@
 
             <div v-for="(item, index) in (loading ? Array(6) : hotels)" :key="loading ? index : item.id"
                 class="px-5 mb-5 w-full flex justify-center">
-                <!-- CARD (SAMA UNTUK LOADING & DATA) -->
                 <div class="max-w-sm w-full rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                    <!-- IMAGE -->
                     <div class="h-40 w-full overflow-hidden">
                         <div v-if="loading" class="bg-gray-300 h-full w-full animate-pulse"></div>
 
                         <img v-else :src="photos[index]?.urls.small" :alt="photos[index]?.alt_description"
                             class="h-full w-full object-cover" />
                     </div>
-
-                    <!-- CONTENT -->
                     <div class="px-6 pt-4 pb-4">
                         <div v-if="loading" class="bg-gray-300 h-6 w-3/4 mb-2 animate-pulse"></div>
 
