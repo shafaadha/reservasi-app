@@ -3,9 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use App\Models\hotel;
+use App\Models\Hotel;
 use App\Models\Room;
-use Database\Factories\HotelFactory;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -27,9 +26,15 @@ class DatabaseSeeder extends Seeder
             RoomSeeder::class
 
         ]);
+
+        User::factory(5)->create([
+            'role' =>fake()->randomElement(['admin', 'user', 'manager'])
+        ]);
+
+
         Hotel::factory()
-            ->count(10) // bikin 10 hotel
-            ->has(Room::factory()->count(3)) // tiap hotel punya 3 room
+            ->count(10) //
+            ->has(Room::factory()->count(3))
             ->create();
     }
 }

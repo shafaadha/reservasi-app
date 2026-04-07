@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             'name' => Str::random(10),
             'email' => uniqid().'@example.com',
             'password' => Hash::make('password'),
+            'role' =>fake()->randomElement(['admin', 'user', 'manager'])
         ]);
     }
 }

@@ -81,7 +81,7 @@ class AuthController extends Controller
         }
         $token = $user->createToken('api-token')->plainTextToken;
 
-        return response()->json(['user' => $user['email'], 'message' => 'Login succesful', 'token' => $token]);
+        return response()->json(['user' => $user['email'], 'role'=>$user['role'], 'message' => 'Login succesful', 'token' => $token]);
     }
 
     public function logout(Request $req)

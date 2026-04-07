@@ -14,7 +14,6 @@ Route::get('/user', function (Request $request) {
 // Authentication Routes
 Route::post('/register', [AuthController::class,'register']);
 Route::post('/login', [AuthController::class,'login']);
-Route::post('/logout', [AuthController::class,'logout']);
 
 // Hotel Routes
 Route::get('/hotels', [HotelController::class,'index']);
@@ -29,6 +28,7 @@ Route::get('/config', function(){
 Route::post('/room/check-availability', [RoomController::class, 'checkAvailability']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth:sanctum')->post('/logout', [AuthController::class,'logout']);
     Route::post('/reservations', [ReservationController::class, 'store']);
     Route::get('/my-reservations', [ReservationController::class, 'myReservations']);
 });
