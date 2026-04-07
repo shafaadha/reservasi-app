@@ -1,7 +1,7 @@
 <template>
     <div class="w-full">
         <!-- Container Form -->
-        <div class="flex justify-center mt-4 px-4">
+        <div class="min-h-screen flex items-center justify-center">
             <div class="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
                 <h1 class="text-2xl font-bold text-center mb-6">Login</h1>
 
@@ -74,14 +74,28 @@ export default {
                     password: this.password,
                 });
 
-                localStorage.setItem("token", res.data.token);
+                console.log("Login Respon", res.data);
+
+                const userRole = res.data.role;
+                const token = res.data.token;
+
+                localStorage.setItem("role", userRole);
+                localStorage.setItem("token", token);
 
                 setAuthToken(res.data.token);
                 window.dispatchEvent(new Event("login-success"));
 
                 const redirectTo = this.$route.query.redirect || "/";
 
-                this.$router.push( redirectTo );
+                console.log("Navigation to", userRole)
+
+                switch (userRole) {
+                    case 'admin':
+                        this.$router.push('/admin/dashboard')
+                        break;
+                    default:
+                        this.$router.push(redirectTo)
+                }
             } catch (err) {
                 this.errorMessages = "Email atau password salah!";
             } finally {

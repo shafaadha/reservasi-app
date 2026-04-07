@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full min-h-screen bg">
+    <div class="w-full min-h-screen bg-white">
         <div class="relative h-80">
             <img src="../assets/picture/home.jpg" alt="home"
                 class="absolute inset-0 w-full h-full object-cover opacity-75">
