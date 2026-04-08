@@ -52,7 +52,7 @@ const routes = [
         meta: { requiresAuth: true, layout: "user" },
     },
     {
-        path: "/admin",
+        path: "/admin/dashboard",
         name: "admin",
         component: DashboardPage,
         meta: { requiresAuth: true, layout: "admin" },

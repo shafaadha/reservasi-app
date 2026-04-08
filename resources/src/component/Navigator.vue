@@ -19,8 +19,16 @@ onMounted(() => {
 // fungsi logout
 async function logout() {
     try {
-        await api.post("/logout");
+        const token = localStorage.getItem("token");
+
+        await api.post("/logout", {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
     } catch (e) {
+        console.log(e);
         console.warn("Logout API gagal");
     } finally {
         localStorage.removeItem("token");
