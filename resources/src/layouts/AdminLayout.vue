@@ -1,28 +1,44 @@
 <script setup>
+import { reactive, onMounted } from "vue";
 import Sidebar from "../component/sidebar/Sidebar.vue";
 import SideBarProvider from "../component/sidebar/SideBarProvider.vue";
-import SidebarTrigger from "../component/SidebarTrigger.vue";
+import Header from "../component/Header.vue";
+import { useAuthStore } from "../stores/auth";
+
+const auth = useAuthStore();
+
+const menuItems = [
+    { name: "Dashboard", icon: "🏠" },
+    { name: "Orders", icon: "📦", badge: 5 },
+    { name: "Schedules", icon: "📅", active: true },
+    { name: "Messages", icon: "💬", badge: 3 },
+    { name: "Inbox", icon: "📥" },
+];
+
+onMounted(async () => {
+    try {
+        await auth.fetchUser();
+        console.log("USER:", auth.user);
+    } catch (e) {
+        console.log("ERROR FETCH USER:", e);
+    }
+});
 </script>
 
 <template>
-    <SidebarProvider>
-        <Sidebar>
-            <div class="p-4 font-bold border-b">My Sidebar</div>
+    <SideBarProvider>
+        <!-- SIDEBAR -->
+        <Sidebar :menu="menuItems" :user="auth.user" />
 
-            <div class="p-4 space-y-2">
-                <a href="#" class="block hover:text-blue-600">Dashboard</a>
-                <a href="#" class="block hover:text-blue-600">Products</a>
-                <a href="#" class="block hover:text-blue-600">Reports</a>
-            </div>
-        </Sidebar>
+        <!-- CONTENT -->
+        <div class="ml-64 flex flex-col min-h-screen">
+            <!-- HEADER -->
+            <Header />
 
-        <div class="flex-1 p-6">
-            <div class="flex items-center gap-3 mb-4">
-                <SidebarTrigger />
-                <h1 class="text-xl font-bold">Dashboard</h1>
-            </div>
-
-            <p>Konten utama...</p>
+            <!-- MAIN -->
+            <main class="p-6">
+                <router-view />
+            </main>
         </div>
-    </SidebarProvider>
+    </SideBarProvider>
 </template>
