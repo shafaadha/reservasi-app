@@ -71,17 +71,34 @@ class AuthController extends Controller
 
     public function login(Request $req)
     {
-        $data = $req->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
-        $user = User::where('email', $data['email'])->first();
-        if (!$user || !Hash::check($data['password'], $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
-        }
-        $token = $user->createToken('api-token')->plainTextToken;
+        try {
+            $data = $req->validate([
+                'email' => 'required|email',
+                'password' => 'required'
+            ]);
 
-        return response()->json(['user' => $user['email'], 'role'=>$user['role'], 'message' => 'Login succesful', 'token' => $token]);
+            $user = User::where('email', $data['email'])->first();
+
+            if (!$user || !Hash::check($data['password'], $user->password)) {
+                return response()->json(['message' => 'Invalid credentials'], 401);
+            }
+
+            $token = $user->createToken('api-token')->plainTextToken;
+
+            return response()->json([
+                'token' => $token,
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                ]
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function logout(Request $req)

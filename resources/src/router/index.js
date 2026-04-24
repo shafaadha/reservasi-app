@@ -10,6 +10,7 @@ import BookingPage from "../views/BookingPage.vue";
 import BookingConfirmation from "../views/BookingConfirmation.vue";
 import { Layout } from "lucide-vue-next";
 import DashboardPage from "../views/Admin/DashboardPage.vue";
+import { useAuthStore } from "../stores/auth";
 
 const routes = [
     { path: "/login", name: "login", component: Login },
@@ -55,7 +56,7 @@ const routes = [
         path: "/admin/dashboard",
         name: "admin",
         component: DashboardPage,
-        meta: { requiresAuth: true, layout: "admin" },
+        meta: { requiresAuth: true, layout: "admin", role: "admin" },
     },
 ];
 
@@ -64,17 +65,35 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach((to, from, next) => {
-    const isLoggedIn = !!localStorage.getItem("token");
+router.beforeEach(async (to, from, next) => {
+    const auth = useAuthStore();
 
-    if (to.meta.requiresAuth && !isLoggedIn) {
-        next({
-            name: "login",
-            query: { redirect: to.fullPath },
-        });
-    } else {
-        next();
+    if (to.path === "/login" || to.path === "/register") {
+        return next();
     }
+
+    if (auth.token && !auth.user) {
+        try {
+            setAuthToken(auth.token);
+            await auth.fetchUser();
+        } catch (e) {
+            return next("/login");
+        }
+    }
+
+    if (to.meta.requiresAuth && !auth.token) {
+        return next("/login");
+    }
+
+    if (to.meta.role) {
+        const isAdmin = auth.user?.role === "admin";
+
+        if (!isAdmin && auth.user?.role !== to.meta.role) {
+            return next("/");
+        }
+    }
+
+    next();
 });
 
 export default router;
