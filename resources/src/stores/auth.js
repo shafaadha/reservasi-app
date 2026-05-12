@@ -37,6 +37,8 @@ export const useAuthStore = defineStore("auth", {
                 this.user = res.data;
             } catch (err) {
                 console.log("USER ERROR:", err.response);
+                console.log(err.response?.status);
+                console.log(err.response?.data);
 
                 this.user = null;
                 this.token = null;
@@ -51,6 +53,8 @@ export const useAuthStore = defineStore("auth", {
             this.token = null;
 
             localStorage.removeItem("token");
+
+            setAuthToken(null);
         },
     },
 });

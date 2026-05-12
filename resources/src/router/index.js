@@ -81,12 +81,13 @@ router.beforeEach(async (to, from, next) => {
         }
     }
 
-    if (to.meta.requiresAuth && !auth.token) {
+    if (to.meta.requiresAuth && !auth.isLoggedIn) {
         return next("/login");
     }
 
     if (to.meta.role) {
         const isAdmin = auth.user?.role === "admin";
+        console.log(isAdmin);
 
         if (!isAdmin && auth.user?.role !== to.meta.role) {
             return next("/");
