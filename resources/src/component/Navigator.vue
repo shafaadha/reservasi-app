@@ -1,24 +1,13 @@
 <script setup>
 import { RouterLink, useRouter } from "vue-router";
-import { ref, onMounted } from "vue";
+import { computed } from "vue";
 import api, { setAuthToken } from "../services/api";
 import { useAuthStore } from "../stores/auth";
 
 const router = useRouter();
 const auth = useAuthStore();
-const isLoggedIn = ref(false);
 
-function checkLogin() {
-    isLoggedIn.value = !!localStorage.getItem("token");
-}
-
-onMounted(() => {
-    isLoggedIn.value = !!localStorage.getItem("token");
-
-    window.addEventListener("login-success", () => {
-        isLoggedIn.value = true;
-    });
-});
+const isLoggedIn = computed(() => auth.isLoggedIn);
 
 // fungsi logout
 async function logout() {
