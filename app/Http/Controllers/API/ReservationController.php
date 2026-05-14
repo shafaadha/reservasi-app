@@ -38,7 +38,7 @@ class ReservationController extends Controller
             'guests' => $request->guests,
             'room_booked' => $request->room_booked,
             'total_price' => $request->total_price,
-            'status' => 'confirmed',
+            'status' => 'Waiting for Confirmation',
         ]);
         return response()->json([
             'message' => 'Booking berhasil',
