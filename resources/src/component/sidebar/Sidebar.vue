@@ -67,7 +67,7 @@ function initials() {
                     :class="item.active ? 'bg-blue-500 text-white' : ''"
                 >
                     <div class="flex items-center gap-3 text-gray">
-                        <span>{{ item.icon }}</span>
+                        <component :is="item.icon"></component>
                         <span>{{ item.name }}</span>
                     </div>
 
