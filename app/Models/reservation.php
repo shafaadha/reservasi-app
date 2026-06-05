@@ -9,22 +9,27 @@ class Reservation extends Model
     protected $fillable = [
         'user_id',
         'hotel_id',
-        'room_id',
+        'room_unit_id',
         'check_in',
         'check_out',
         'guests',
-        'room_booked',
         'total_price',
         'status',
+    ];
+
+    protected $casts = [
+        'check_in' => 'datetime',
+        'check_out' => 'datetime',
+        'total_price' => 'decimal:2',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-    public function room()
+    public function roomUnit()
     {
-        return $this->belongsTo(Room::class);
+        return $this->belongsTo(RoomUnit::class);
     }
     public function hotel()
     {
