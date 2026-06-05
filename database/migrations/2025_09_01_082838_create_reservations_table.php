@@ -15,13 +15,18 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('hotel_id')->constrained()->onDelete('cascade');
-            $table->foreignId('room_id')->constrained()->onDelete('cascade');
+            $table->foreignId('room_unit_id')->constrained()->onDelete('cascade');
             $table->date('check_in');
             $table->date('check_out');
             $table->integer('guests')->default(1);
-            $table->integer('room_booked')->default(1);
             $table->decimal('total_price', 12, 2);
-            $table->string('status')->default('pending');
+            $table->enum('status', [
+                'pending',
+                'confirmed',
+                'checked_in',
+                'checked_out',
+                'cancelled'
+            ])->default('pending');
             $table->timestamps();
         });
     }
