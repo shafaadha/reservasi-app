@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from "vue";
 import { useSidebar } from "../../composables/useSidebar";
+import { RouterLink, useRouter } from "vue-router";
 
 const props = defineProps({
     side: { type: String, default: "left" },
@@ -59,15 +60,17 @@ function initials() {
             </div>
 
             <!-- Menu -->
-            <nav class="flex flex-col gap-1 px-2">
-                <div
+            <nav class="flex flex-col gap-1 px-2 py-2">
+                <router-link
                     v-for="item in menu"
                     :key="item.name"
-                    class="flex items-center justify-between px-4 py-2 rounded-lg cursor-pointer hover:bg-gray-400"
-                    :class="item.active ? 'bg-blue-500 text-white' : ''"
+                    :to="item.to"
+                    class="flex items-center justify-between px-4 py-2 rounded-lg hover:bg-gray-100"
+                    active-class="bg-indigo-600 text-white"
+                    @click="closeMobile"
                 >
-                    <div class="flex items-center gap-3 text-gray">
-                        <component :is="item.icon"></component>
+                    <div class="flex items-center gap-3">
+                        <component :is="item.icon" class="w-5 h-5" />
                         <span>{{ item.name }}</span>
                     </div>
 
@@ -77,7 +80,7 @@ function initials() {
                     >
                         {{ item.badge }}
                     </span>
-                </div>
+                </router-link>
             </nav>
         </div>
 
