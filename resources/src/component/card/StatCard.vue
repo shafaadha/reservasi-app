@@ -47,7 +47,15 @@ const subtitleColor = {
 
 <template>
     <div
-        :class="['stat-card', className]"
+        :class="[
+            'bg-white rounded-xl p-5',
+            'border border-gray-100',
+            'shadow-sm',
+            'hover:shadow-xl',
+            'hover:-translate-y-1',
+            'transition-all duration-300',
+            'cursor-pointer',
+        ]"
         style="
             background: #fff;
             border-radius: 14px;
@@ -55,7 +63,6 @@ const subtitleColor = {
             display: flex;
             flex-direction: column;
             gap: 6px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
             min-width: 0;
             flex: 1;
         "
