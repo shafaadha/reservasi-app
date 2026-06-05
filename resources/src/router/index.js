@@ -11,6 +11,7 @@ import BookingConfirmation from "../views/BookingConfirmation.vue";
 import { Layout } from "lucide-vue-next";
 import DashboardPage from "../views/Admin/DashboardPage.vue";
 import { useAuthStore } from "../stores/auth";
+import RoomPage from "../views/Admin/RoomPage.vue";
 
 const routes = [
     { path: "/login", name: "login", component: Login },
@@ -54,8 +55,14 @@ const routes = [
     },
     {
         path: "/admin/dashboard",
-        name: "admin",
+        name: "dashboard",
         component: DashboardPage,
+        meta: { requiresAuth: true, layout: "admin", role: "admin" },
+    },
+    {
+        path: "/admin/rooms",
+        name: "roomRes",
+        component: RoomPage,
         meta: { requiresAuth: true, layout: "admin", role: "admin" },
     },
 ];
