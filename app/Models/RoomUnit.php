@@ -20,7 +20,7 @@ class RoomUnit extends Model
         return $this->belongsTo(Room::class);
     }
 
-    public function reservation()
+    public function reservations()
     {
         return $this->hasMany(Reservation::class);
     }
