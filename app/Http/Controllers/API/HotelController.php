@@ -16,8 +16,7 @@ class HotelController extends Controller
     public function index()
     {
         $hotels = Hotel::all();
-        return response(['message'=> 'sucess','data'=>$hotels]);
-        
+        return response(['message' => 'success', 'data' => $hotels]);
     }
 
     /**

@@ -16,16 +16,15 @@ const selectedCategories = ref([]);
 
 const priceRange = ref({
     min: 0,
-    max: 3000000
-})
+    max: 3000000,
+});
 
 const filteredRooms = computed(() => {
-    return rooms.value.filter(room => {
+    return rooms.value.filter((room) => {
         const price = Number(room.price);
 
         const matchPrice =
-            price >= priceRange.value.min &&
-            price <= priceRange.value.max;
+            price >= priceRange.value.min && price <= priceRange.value.max;
 
         const matchCategory =
             selectedCategories.value.length === 0 ||
@@ -35,12 +34,10 @@ const filteredRooms = computed(() => {
     });
 });
 
-
 const roomCategories = computed(() => {
-    const types = rooms.value.map(r => r.type);
+    const types = rooms.value.map((r) => r.type);
     return [...new Set(types)];
 });
-
 
 onMounted(async () => {
     try {
@@ -53,7 +50,8 @@ onMounted(async () => {
             guest,
             room,
         });
-        rooms.value = response.data.availableRooms || [];
+        rooms.value = response.data.data || [];
+        console.log(rooms);
 
         // fetch access key unsplash
         const configRes = await api.get("/config");
@@ -66,7 +64,7 @@ onMounted(async () => {
         });
         photos.value = res.data.results;
     } catch (err) {
-        console.error("Error:", err);
+        console.log(err.response.data);
     } finally {
         loading.value = false;
     }
@@ -76,15 +74,16 @@ const reservation = (room) => {
     router.push({
         name: "BookingPage",
         query: {
+            hotelId: room.hotel_id,
             roomId: room.id,
             name: room.name,
             price: room.price,
             checkin: route.query.checkin,
             checkout: route.query.checkout,
             guest: route.query.guest,
-        }
-    })
-}
+        },
+    });
+};
 </script>
 
 <template>
@@ -93,23 +92,43 @@ const reservation = (room) => {
             <!-- Sidebar -->
             <aside class="md:col-span-1 bg-white shadow rounded p-4 h-fit">
                 <h2 class="text-lg font-semibold mb-3">Filter</h2>
-                <PriceRangeSlider v-model="priceRange" :minLimit="0" :maxLimit="3000000" :gap="50000" :step="10000" />
-                <CategoryFilter class="mt-4" v-model="selectedCategories" :categories="roomCategories" />
-
+                <PriceRangeSlider
+                    v-model="priceRange"
+                    :minLimit="0"
+                    :maxLimit="3000000"
+                    :gap="50000"
+                    :step="10000"
+                />
+                <CategoryFilter
+                    class="mt-4"
+                    v-model="selectedCategories"
+                    :categories="roomCategories"
+                />
             </aside>
 
             <!-- Main Content -->
             <main class="md:col-span-3">
-                <h1 class="text-2xl font-bold mb-5 text-center">Daftar Kamar Tersedia</h1>
+                <h1 class="text-2xl font-bold mb-5 text-center">
+                    Daftar Kamar Tersedia
+                </h1>
 
                 <div v-if="filteredRooms.length">
-                    <div v-for="(room, index) in filteredRooms" :key="room.id"
-                        class="flex flex-col md:flex-row justify-between items-center border border-gray-200 rounded p-4 mb-3 shadow-sm hover:shadow-md transition-shadow duration-200">
-                        <img v-if="photos[index]" :src="photos[index].urls.small" :alt="photos[index].alt_description"
-                            class="w-48 h-32 object-cover rounded-md mb-3 md:mb-0 md:mr-4" />
+                    <div
+                        v-for="(room, index) in filteredRooms"
+                        :key="room.id"
+                        class="flex flex-col md:flex-row justify-between items-center border border-gray-200 rounded p-4 mb-3 shadow-sm hover:shadow-md transition-shadow duration-200"
+                    >
+                        <img
+                            v-if="photos[index]"
+                            :src="photos[index].urls.small"
+                            :alt="photos[index].alt_description"
+                            class="w-48 h-32 object-cover rounded-md mb-3 md:mb-0 md:mr-4"
+                        />
 
                         <div class="flex-1">
-                            <h2 class="font-semibold text-lg">{{ room.name }}</h2>
+                            <h2 class="font-semibold text-lg">
+                                {{ room.hotel.name }}
+                            </h2>
                             <p>Tipe: {{ room.type }}</p>
                             <p>Kapasitas: {{ room.capacity }} orang</p>
                             <p>Jumlah tersedia: {{ room.quantity }}</p>
@@ -117,10 +136,13 @@ const reservation = (room) => {
 
                         <div class="text-right mt-3 md:mt-0">
                             <div class="text-green-600 font-bold mb-2">
-                                Rp {{ Number(room.price).toLocaleString("id-ID") }}
+                                Rp
+                                {{ Number(room.price).toLocaleString("id-ID") }}
                             </div>
-                            <button @click="() => reservation(room)"
-                                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+                            <button
+                                @click="() => reservation(room)"
+                                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                            >
                                 Pesan
                             </button>
                         </div>
@@ -128,7 +150,9 @@ const reservation = (room) => {
                 </div>
 
                 <div v-else>
-                    <p class="text-center text-gray-500">Tidak ada kamar tersedia.</p>
+                    <p class="text-center text-gray-500">
+                        Tidak ada kamar tersedia.
+                    </p>
                 </div>
             </main>
         </div>

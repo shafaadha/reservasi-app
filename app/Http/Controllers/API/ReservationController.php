@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
+use App\Models\Room;
 use App\Models\RoomUnit;
 use Illuminate\Container\Attributes\Auth;
 
@@ -23,15 +24,37 @@ class ReservationController extends Controller
     {
         $data = $request->validate([
             'hotel_id' => 'required|exists:hotels,id',
-            'room_unit_id' => 'required|exists:room_units,id',
+            'room_id' => 'required|exists:rooms,id',
             'check_in' => 'required|date',
             'check_out' => 'required|date|after:check_in',
             'guests' => 'required|integer|min:1',
-            'total_price' => 'required|numeric|min:0',
         ]);
-
+        $room = Room::findOrFail($data['room_id']);
         $roomUnit = RoomUnit::with('room')
             ->findOrFail($data['room_unit_id']);
+
+        $availableUnit = $room->roomUnits()
+            ->whereDoesntHave('reservations', function ($query) use ($data) {
+                $query->whereIn('status', [
+                    'pending',
+                    'confirmed',
+                    'checked_in'
+                ])
+                    ->where('check_in', '<', $data['check_out'])
+                    ->where('check_out', '>', $data['check_in']);
+            })
+            ->first();
+
+        if (!$availableUnit) {
+            return response()->json([
+                'message' => 'Tidak ada kamar tersedia'
+            ], 422);
+        }
+
+        $days = \Carbon\Carbon::parse($data['check_in'])
+            ->diffInDays($data['check_out']);
+
+        $totalPrice = $days * $room->price;
 
         $isBooked = Reservation::where('room_unit_id', $data['room_unit_id'])
             ->whereIn('status', [
@@ -67,18 +90,18 @@ class ReservationController extends Controller
         $reservation = Reservation::create([
             'user_id' => auth()->id(),
             'hotel_id' => $data['hotel_id'],
-            'room_id' => $data['room_id'],
+            'room_unit_id' => $availableUnit->id,
             'check_in' => $data['check_in'],
             'check_out' => $data['check_out'],
             'guests' => $data['guests'],
-            'room_booked' => $data['room_booked'],
-            'total_price' => $data['total_price'],
+            'total_price' => $totalPrice,
             'status' => 'pending',
         ]);
         return response()->json([
             'message' => 'Booking success',
-            'reservation' => $reservation
-        ], 201);
+            'reservation' => $reservation,
+            'room_number' => $availableUnit->room_number,
+        ]);
     }
 
     public function myReservations()
