@@ -28,7 +28,6 @@ class RoomFactory extends Factory
                 ]),
                 'type' => $this->faker->randomElement(['Deluxe', 'Suite', 'Standard', 'Executive']),
                 'capacity' => $this->faker->numberBetween(1, 4),
-                'quantity' => $this->faker->numberBetween(1, 10),
                 'price' => $this->faker->randomFloat(2, 200000, 2000000), // Rp200.000 - Rp2.000.000
                 'description' => $this->faker->sentence(10),
             ];
