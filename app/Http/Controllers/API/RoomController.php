@@ -6,6 +6,7 @@ use App\Models\Room;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\reservation;
+use App\Models\Reservation as ModelsReservation;
 
 class RoomController extends Controller
 {
@@ -29,7 +30,7 @@ class RoomController extends Controller
             ], 422);
         }
 
-        if(strtotime($checkin) < strtotime(date('Y-m-d'))){
+        if (strtotime($checkin) < strtotime(date('Y-m-d'))) {
             return response()->json([
                 'message' => 'Tanggal check-in harus hari ini atau setelahnya.'
             ], 422);
@@ -47,33 +48,30 @@ class RoomController extends Controller
             ], 422);
         }
 
-        $rooms = Room::all();
+        $rooms = Room::with('hotel')->get();
 
         $availableRooms = $rooms->filter(function ($room) use ($checkin, $checkout, $guest, $roomNeed) {
+
             if ($room->capacity < $guest) {
                 return false;
             }
 
-            $bookedCount = Reservation::where('room_id', $room->id)
-                ->where(function ($query) use ($checkin, $checkout) {
-                    $query->whereBetween('check_in', [$checkin, $checkout])
-                        ->orWhereBetween('check_out', [$checkin, $checkout])
-                        ->orWhere(function ($q) use ($checkin, $checkout) {
-                            $q->where('check_in', '<=', $checkin)
-                                ->where('check_out', '>=', $checkout);
-                        });
+            $availableUnits = $room->roomUnits()
+                ->whereDoesntHave('reservations', function ($query) use ($checkin, $checkout) {
+                    $query->whereIn('status', ['pending', 'confirmed'])
+                        ->where('check_in', '<', $checkout)
+                        ->where('check_out', '>', $checkin);
                 })
-                ->sum('guests');
+                ->count();
 
-            // Hitung kamar tersisa
-            $remaining = $room->quantity - $bookedCount;
-
-            // Hanya return kamar yang masih ada stok cukup
-            return $remaining >= $roomNeed;
+            return $availableUnits >= $roomNeed;
         });
+        $rooms = Room::all();
 
         return response()->json([
-            'availableRooms' => $availableRooms->values()
+            'total_rooms' => $rooms->count(),
+            'available_rooms' => $availableRooms->count(),
+            'data' => $availableRooms->values()
         ]);
     }
     /**
