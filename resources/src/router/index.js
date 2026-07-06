@@ -12,6 +12,9 @@ import { Layout } from "lucide-vue-next";
 import DashboardPage from "../views/Admin/DashboardPage.vue";
 import { useAuthStore } from "../stores/auth";
 import RoomPage from "../views/Admin/RoomPage.vue";
+import ReservationPage from "../views/Admin/ReservationPage.vue";
+import Unauthorized from "../component/Unauthorized.vue";
+import NotFound from "../component/NotFound.vue";
 
 const routes = [
     { path: "/login", name: "login", component: Login },
@@ -61,11 +64,30 @@ const routes = [
     },
     {
         path: "/admin/rooms",
-        name: "roomRes",
+        name: "roomRoom",
         component: RoomPage,
         meta: { requiresAuth: true, layout: "admin", role: "admin" },
     },
+
+    {
+        path: "/admin/reservation",
+        name: "roomRes",
+        component: ReservationPage,
+        meta: { requiresAuth: true, layout: "admin", role: "admin" },
+    },
 ];
+
+router.push(
+    {
+        path: "/unauthorized",
+        component: Unauthorized,
+    },
+    {
+        path: "/:pathMatch(.*)",
+        name: "NotFound",
+        component: NotFound,
+    },
+);
 
 const router = createRouter({
     history: createWebHistory(),
@@ -89,7 +111,13 @@ router.beforeEach(async (to, from, next) => {
     }
 
     if (to.meta.requiresAuth && !auth.isLoggedIn) {
-        return next("/login");
+        return next({
+            name: "login",
+            query: {
+                redirect: to.path,
+                ...to.query,
+            },
+        });
     }
 
     if (to.meta.role) {
