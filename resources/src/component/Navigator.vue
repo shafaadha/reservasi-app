@@ -30,7 +30,7 @@ async function logout() {
         localStorage.removeItem("token");
         setAuthToken(null);
         isLoggedIn.value = false;
-        router.push({ name: "home" });
+        window.location.reload();
     }
 }
 </script>
