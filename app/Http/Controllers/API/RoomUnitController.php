@@ -12,27 +12,76 @@ class RoomUnitController extends Controller
     /**
      * Display a listing of the resource.
      */
+    // public function index()
+    // {
+    //     $totalUnit = RoomUnit::count();
+
+    //     $availableUnit = RoomUnit::where('status', 'available')->count();
+
+    //     $occupiedUnit = RoomUnit::where('status', 'occupied')->count();
+
+    //     $resToday = Reservation::whereDate('check_in', today())->count();
+
+    //     $revenueToday = Reservation::whereDate('check_in', today())
+    //         ->where('status', 'confirmed')
+    //         ->sum('total_price');
+
+    //     $roomUnits = RoomUnit::with([
+    //         'latestPaidReservation.user',
+    //         'latestPaidReservation.payment',
+    //     ])
+    //         ->paginate(10);
+
+    //     return response()->json([
+    //         'totalUnit' => $totalUnit,
+    //         'availableUnit' => $availableUnit,
+    //         'occupiedUnit' => $occupiedUnit,
+    //         'resToday' => $resToday,
+    //         'revToday' => $revenueToday,
+    //         'unitRes' => $roomUnits
+    //     ]);
+    // }
+
     public function index()
     {
         $totalUnit = RoomUnit::count();
 
         $availableUnit = RoomUnit::where('status', 'available')->count();
 
-        $occupiedUnit = RoomUnit::where('status', 'occupied')->count();
-
         $resToday = Reservation::whereDate('check_in', today())->count();
+
+        $occupiedUnit = RoomUnit::where('status', 'available')->count();
 
         $revenueToday = Reservation::whereDate('check_in', today())
             ->where('status', 'confirmed')
             ->sum('total_price');
 
+        // $roomUnits = RoomUnit::with('latestPaidReservation')->paginate(10);
+
         return response()->json([
-            'totalUnit' => $totalUnit,
-            'availableUnit' => $availableUnit,
-            'occupiedUnit' => $occupiedUnit,
-            'resToday' => $resToday,
-            'revToday' => $revenueToday
+            'summary' => [
+                'totalUnit' => $totalUnit,
+                'availableUnit' => $availableUnit,
+                'occupiedUnit' => $occupiedUnit,
+                'resToday' => $resToday,
+                'revToday' => $revenueToday,
+            ],
+
+            'latestReservations' => Reservation::with([
+                'user',
+                'roomUnit',
+                'payment'
+            ])
+                ->latest()
+                ->take(5)
+                ->get(),
         ]);
+    }
+
+
+    public function roomReservation()
+    {
+        $rooms = RoomUnit::with('reservation')->get();
     }
 
     /**

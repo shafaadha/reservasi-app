@@ -37,7 +37,7 @@ async function logout() {
 
 <template>
     <div
-        class="navigator bg-cyan-400 text-white p-4 rounded-b-lg shadow flex items-center justify-between"
+        class="navigator bg-second-color text-white p-4 rounded-b-lg shadow flex items-center justify-between"
     >
         <div>
             <RouterLink to="/" class="text-2xl font-bold"
@@ -45,39 +45,45 @@ async function logout() {
             >
         </div>
         <ul class="flex items-center space-x-2">
-            <li class="hover:bg-cyan-600 rounded-md">
+            <li class="hover:bg-primer-color rounded-md">
                 <RouterLink
                     to="/rooms"
                     class="block px-4 py-2"
-                    active-class="bg-cyan-700 rounded-md"
+                    active-class="bg-primer-color rounded-md"
                     >Room</RouterLink
                 >
             </li>
-            <li class="hover:bg-cyan-700 hover:rounded-md">
+            <li class="hover:bg-primer-color hover:rounded-md">
                 <RouterLink
                     to="/about"
                     class="block px-4 py-2"
-                    active-class="bg-cyan-700 rounded-md"
+                    active-class="bg-primer-color rounded-md"
                     >About us
                 </RouterLink>
             </li>
-            <li v-if="isLoggedIn" class="hover:bg-cyan-700 hover:rounded-md">
+            <li
+                v-if="isLoggedIn"
+                class="hover:bg-primer-color hover:rounded-md"
+            >
                 <router-link
                     to="/my-reservations"
                     class="block px-4 py-2"
-                    active-class="bg-cyan-700 rounded-md"
+                    active-class="bg-primer-color rounded-md"
                     >My Reservations</router-link
                 >
             </li>
-            <li v-if="!isLoggedIn" class="hover:bg-cyan-600 hover:rounded-md">
+            <li
+                v-if="!isLoggedIn"
+                class="hover:bg-primer-color hover:rounded-md"
+            >
                 <RouterLink
                     to="/login"
                     class="block px-4 py-2"
-                    active-class="bg-cyan-600 rounded-md"
+                    active-class="bg-primer-color rounded-md"
                     >Login</RouterLink
                 >
             </li>
-            <li v-else class="hover:bg-cyan-600 rounded-md">
+            <li v-else class="hover:bg-primer-color rounded-md">
                 <button
                     @click="logout"
                     class="block px-4 py-2 w-full text-left"

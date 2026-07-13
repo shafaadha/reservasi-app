@@ -15,6 +15,7 @@ import RoomPage from "../views/Admin/RoomPage.vue";
 import ReservationPage from "../views/Admin/ReservationPage.vue";
 import Unauthorized from "../component/Unauthorized.vue";
 import NotFound from "../component/NotFound.vue";
+import { setAuthToken } from "../services/api.js";
 
 const routes = [
     { path: "/login", name: "login", component: Login },
@@ -75,19 +76,16 @@ const routes = [
         component: ReservationPage,
         meta: { requiresAuth: true, layout: "admin", role: "admin" },
     },
-];
-
-router.push(
     {
         path: "/unauthorized",
         component: Unauthorized,
     },
     {
-        path: "/:pathMatch(.*)",
+        path: "/:pathMatch(.*)*",
         name: "NotFound",
         component: NotFound,
     },
-);
+];
 
 const router = createRouter({
     history: createWebHistory(),
@@ -98,6 +96,14 @@ router.beforeEach(async (to, from, next) => {
     const auth = useAuthStore();
 
     if (to.path === "/login" || to.path === "/register") {
+        if (auth.isLoggedIn) {
+            if (auth.user?.role === "admin") {
+                return next({ name: "dashboard" });
+            }
+
+            return next({ name: "home" });
+        }
+
         return next();
     }
 

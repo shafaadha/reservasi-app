@@ -50,7 +50,7 @@ function initials() {
         <div>
             <!-- Logo -->
             <div
-                class="flex items-center gap-2 px-6 py-4 font-bold text-lg border-b border-gray-300"
+                class="flex items-center gap-2 px-6 py-4 font-bold text-lg border-b border-gray-300 text-gray-800"
             >
                 <span class="text-blue-600"></span>
                 <div class="flex flex-col">
@@ -60,7 +60,7 @@ function initials() {
             </div>
 
             <!-- Menu -->
-            <nav class="flex flex-col gap-1 px-2 py-2">
+            <nav class="flex flex-col gap-1 px-2 py-2 text-gray-800">
                 <router-link
                     v-for="item in menu"
                     :key="item.name"

@@ -24,4 +24,19 @@ class RoomUnit extends Model
     {
         return $this->hasMany(Reservation::class);
     }
+
+
+    public function latestPaidReservation()
+    {
+        return $this->hasOne(Reservation::class)->latestOfMany();
+    }
+    // public function latestPaidReservation()
+    // {
+    //     return $this->hasOne(Reservation::class)
+    //         ->ofMany('id', 'max', function ($query) {
+    //             $query->whereHas('payment', function ($q) {
+    //                 $q->where('status', 'paid');
+    //             });
+    //         });
+    // }
 }

@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hotel_id')->nullable()->constrained();
             $table->string('name');
             $table->string('email')->unique();
+            $table->integer('phone_number')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin', 'user', 'manager', 'superadmin'])->default('user');;
+            $table->enum('role', ['admin', 'user', 'manager', 'superAdmin'])->default('user');
+            $table->unsignedBigInteger('hotel_id')->nullable();
+            $table->foreign('hotel_id')->references('id')->on('hotels');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -36,6 +38,10 @@ return new class extends Migration
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();
+        });
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->unsignedBigInteger('hotel_id')->nullable()->change();
         });
     }
 

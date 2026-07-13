@@ -4,7 +4,8 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\HotelController;
 use App\Http\Controllers\API\ReservationController;
 use App\Http\Controllers\API\RoomController;
-use App\Http\Controllers\API\DashboardController;
+use App\Http\Controllers\API\PaymentController;
+use App\Http\Controllers\API\RoomUnitController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,5 +35,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/reservations', [ReservationController::class, 'store']);
     Route::get('/my-reservations', [ReservationController::class, 'myReservations']);
 });
+Route::get('/dashboard', [RoomUnitController::class, 'index']);
 
-Route::get('/dashboard', [DashboardController::class, 'index']);
+
+Route::post('/payments', [PaymentController::class, 'create']);
+Route::post('/webhooks/midtrans', [PaymentController::class, 'webHook']);

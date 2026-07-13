@@ -1,4 +1,5 @@
 <script setup>
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 defineProps({
     title: {
         type: String,
@@ -17,8 +18,12 @@ defineProps({
         default: "neutral", // "positive" | "negative" | "neutral" | "info"
     },
     icon: {
-        type: Object,
+        type: [Object, Function],
         required: true,
+    },
+    iconType: {
+        type: String,
+        default: "hero",
     },
     iconColor: {
         type: String,
@@ -48,11 +53,10 @@ const subtitleColor = {
 <template>
     <div
         :class="[
-            'bg-white rounded-xl p-5',
-            'border border-gray-100',
-            'shadow-sm',
-            'hover:shadow-xl',
-            'hover:-translate-y-1',
+            'bg-white rounded-lg p-5',
+            'shadow-md',
+            // 'hover:shadow-xl',
+            // 'hover:-translate-y-1',
             'transition-all duration-300',
             'cursor-pointer',
         ]"
@@ -90,8 +94,15 @@ const subtitleColor = {
                 ]"
             >
                 <component
+                    v-if="iconType === 'hero'"
                     :is="icon"
-                    style="width: 20px; height: 20px; color: #fff"
+                    class="w-5 h-5 text-white"
+                />
+
+                <FontAwesomeIcon
+                    v-else
+                    :icon="icon"
+                    class="text-white text-lg"
                 />
             </div>
         </div>

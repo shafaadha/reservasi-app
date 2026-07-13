@@ -18,7 +18,6 @@ class RoomFactory extends Factory
     public function definition(): array
     { {
             return [
-                // otomatis bikin hotel baru kalau belum ada
                 'hotel_id' => Hotel::factory(),
                 'name' => $this->faker->randomElement([
                     'Deluxe Room',
