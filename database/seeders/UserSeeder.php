@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -16,9 +17,10 @@ class UserSeeder extends Seeder
     {
         DB::table('users')->insert([
             'name' => Str::random(10),
-            'email' => uniqid().'@example.com',
+            'email' => uniqid() . '@example.com',
             'password' => Hash::make('password'),
-            'role' =>fake()->randomElement(['admin', 'user', 'manager'])
+            'phone_number' => fake()->phoneNumber(),
+            'role' => fake()->randomElement(['admin', 'user', 'manager'])
         ]);
     }
 }
