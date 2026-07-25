@@ -71,7 +71,7 @@ class RoomUnitController extends Controller
                 'user',
                 'roomUnit',
                 'payment'
-            ])
+            ])->where('hotel_id', auth()->user()->hotel_id)
                 ->latest()
                 ->take(5)
                 ->get(),

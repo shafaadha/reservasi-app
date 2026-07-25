@@ -13,6 +13,10 @@ class ReservationController extends Controller
 
     protected ReservationServiceInterface $reservationService;
 
+    public function __construct(ReservationServiceInterface $reservationService)
+    {
+        $this->reservationService = $reservationService;
+    }
     public function index()
     {
         return Reservation::with([
@@ -31,6 +35,7 @@ class ReservationController extends Controller
             'check_in' => 'required|date',
             'check_out' => 'required|date|after:check_in',
             'guests' => 'required|integer|min:1',
+            'room_count' => 'required|integer|min:1',
         ]);
 
         $reservation = $this->reservationService->createReservation($data);
@@ -44,12 +49,14 @@ class ReservationController extends Controller
 
     public function myReservations()
     {
-        return Reservation::with([
-            'hotel',
-            'roomUnit.room'
-        ])
-            ->where('user_id', auth()->id())
-            ->latest()
-            ->get();
+        try {
+            $reservations = $this->reservationService->getReservationByUserId(auth()->id);
+
+            return response()->json($reservations);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], $e->getCode() ?: 500);
+        }
     }
 }
