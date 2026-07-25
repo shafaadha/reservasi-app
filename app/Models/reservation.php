@@ -27,9 +27,14 @@ class Reservation extends Model
     {
         return $this->belongsTo(User::class);
     }
-    public function roomUnit()
+    public function roomUnits()
     {
-        return $this->belongsTo(RoomUnit::class);
+        return $this->belongsToMany(
+            RoomUnit::class,
+            'reservation_rooms',
+            'reservation_id',
+            'room_unit_id'
+        );
     }
     public function hotel()
     {
@@ -39,5 +44,10 @@ class Reservation extends Model
     public function payment()
     {
         return $this->hasOne(Payment::class);
+    }
+
+    public function reservationRoom()
+    {
+        return $this->hasMany(ReservationRoom::class);
     }
 }

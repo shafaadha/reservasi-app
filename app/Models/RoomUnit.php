@@ -22,7 +22,18 @@ class RoomUnit extends Model
 
     public function reservations()
     {
-        return $this->hasMany(Reservation::class);
+        return $this->belongsToMany(
+            Reservation::class,
+            'reservation_rooms',
+            'room_unit_id',
+            'reservation_id'
+        );
+    }
+
+
+    public function roomReservation()
+    {
+        return $this->belongsTo(ReservationRoom::class);
     }
 
 
