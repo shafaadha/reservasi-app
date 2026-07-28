@@ -6,8 +6,10 @@ use App\Models\User;
 use App\Services\AuthService;
 use App\Services\Contracts\AuthServiceInterface;
 use App\Services\Contracts\ReservationServiceInterface;
+use App\Services\Contracts\RoomServiceInterface;
 use App\Services\Contracts\UserServiceInterface;
 use App\Services\ReservationService;
+use App\Services\RoomService;
 use App\Services\UserService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -27,6 +29,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             ReservationServiceInterface::class,
             ReservationService::class
+        );
+
+        $this->app->bind(
+            RoomServiceInterface::class,
+            RoomService::class
         );
     }
 

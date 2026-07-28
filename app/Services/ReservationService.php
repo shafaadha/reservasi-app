@@ -3,8 +3,8 @@
 namespace App\Services;
 
 use App\Models\Reservation;
+use App\Models\ReservationRoom;
 use App\Models\Room;
-use App\Models\RoomUnit;
 use App\Services\Contracts\ReservationServiceInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -23,54 +23,76 @@ class ReservationService implements ReservationServiceInterface
     {
         return DB::transaction(function () use ($data) {
 
-            $roomUnit = $this->checkRoomAvailability($data);
+            $roomUnits = $this->checkRoomAvailability($data);
 
-            $totalPrice = $this->calculateTotalPrice($roomUnit->room, $data);
+            $totalPrice = $this->calculateTotalPrice(
+                $roomUnits->first()->room,
+                $data
+            );
 
-            return Reservation::create([
+            $reservation = Reservation::create([
                 'user_id' => auth()->id(),
                 'hotel_id' => $data['hotel_id'],
-                'room_unit_id' => $roomUnit->id,
                 'check_in' => $data['check_in'],
                 'check_out' => $data['check_out'],
                 'guests' => $data['guests'],
                 'total_price' => $totalPrice,
                 'status' => 'pending',
             ]);
+
+            foreach ($roomUnits as $roomUnit) {
+                ReservationRoom::create([
+                    'reservation_id' => $reservation->id,
+                    'room_unit_id' => $roomUnit->id,
+                ]);
+            }
+
+            return $reservation;
         });
     }
 
     public function checkRoomAvailability(array $data)
     {
-        //get room
         $room = Room::findOrFail($data['room_id']);
 
+        $availableRoomUnits = $room->roomUnits()
+            ->whereDoesntHave('reservations', function ($query) use ($data) {
+                $query->whereIn('status', [
+                    'pending',
+                    'confirmed',
+                    'checked_in',
+                ])
+                    ->where('check_in', '<', $data['check_out'])
+                    ->where('check_out', '>', $data['check_in']);
+            })
+            ->limit($data['room_count'])
+            ->get();
 
-        //get reservation data that relate to room
-        $availableRoomUnit = $room->roomUnits()->whereDoesntHave('reservations', function ($query) use ($data) {
-            $query->whereIn('status', [
-                'pending',
-                'confirmed',
-                'check_in'
-            ])->where('check_in', '<', $data['check_in'])
-                ->where('check_out', '>', $data['check_out']);
-        })->first();
-
-        if (!$availableRoomUnit) {
-            throw new \Exception('Room is not available', 409);
+        if ($availableRoomUnits->count() < $data['room_count']) {
+            throw new \Exception('Available rooms are not sufficient.', 409);
         }
 
-        return $availableRoomUnit;
+        return $availableRoomUnits;
     }
 
-
-    public function calculateTotalPrice(RoomUnit $room, array $data)
+    public function calculateTotalPrice(Room $room, array $data)
     {
-        //calculate days
+        // calculate days
         $days = Carbon::parse($data['check_in'])->diffInDays($data['check_out']);
 
         $totalPrice = $days * $room->price;
 
         return $totalPrice;
+    }
+
+    public function getReservationByUserId(int $userId)
+    {
+        return Reservation::with([
+            'hotel',
+            'roomUnits.room',
+        ])
+            ->where('user_id', $userId)
+            ->latest()
+            ->get();
     }
 }

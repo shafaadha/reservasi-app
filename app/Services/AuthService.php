@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Services\Contracts\AuthServiceInterface;
 use Illuminate\Support\Facades\Hash;
+use Nette\Schema\ValidationException;
 
 class AuthService implements AuthServiceInterface
 {
@@ -17,13 +18,15 @@ class AuthService implements AuthServiceInterface
     {
         $user = User::where('email', $data['email'])->first();
 
-        if (!$user || !Hash::check($data['password'], $user->password)) {
-            throw new \Exception('Invalid credentials', 401);
+        if (! $user || ! Hash::check($data['password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['Email atau password salah.'],
+            ]);
         }
 
         return [
             'token' => $user->createToken('api-token')->plainTextToken,
-            'user' => $user
+            'user' => $user,
         ];
     }
 
