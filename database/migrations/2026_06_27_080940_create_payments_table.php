@@ -31,8 +31,6 @@ return new class extends Migration
 
             $table->timestamp('paid_at')->nullable();
 
-
-
             $table->timestamps();
         });
     }

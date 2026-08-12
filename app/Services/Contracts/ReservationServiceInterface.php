@@ -13,4 +13,6 @@ interface ReservationServiceInterface
     public function createReservation(array $data);
 
     public function getReservationByUserId(int $userId);
+
+    public function getHotelReservations(int $hotelId);
 }
