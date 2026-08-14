@@ -8,6 +8,7 @@ use App\Models\Room;
 use App\Services\Contracts\ReservationServiceInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException as ValidationValidationException;
 
 class ReservationService implements ReservationServiceInterface
 {
@@ -47,7 +48,12 @@ class ReservationService implements ReservationServiceInterface
                 ]);
             }
 
-            return $reservation;
+            // return $reservation;
+            return $reservation->load([
+                'roomUnits',
+                'user',
+                'hotel',
+            ]);
         });
     }
 
@@ -56,6 +62,7 @@ class ReservationService implements ReservationServiceInterface
         $room = Room::findOrFail($data['room_id']);
 
         $availableRoomUnits = $room->roomUnits()
+            ->where('status', '!=', 'maintenance')
             ->whereDoesntHave('reservations', function ($query) use ($data) {
                 $query->whereIn('status', [
                     'pending',
@@ -65,11 +72,14 @@ class ReservationService implements ReservationServiceInterface
                     ->where('check_in', '<', $data['check_out'])
                     ->where('check_out', '>', $data['check_in']);
             })
+            ->lockForUpdate()
             ->limit($data['room_count'])
             ->get();
 
         if ($availableRoomUnits->count() < $data['room_count']) {
-            throw new \Exception('Available rooms are not sufficient.', 409);
+            throw ValidationValidationException::withMessages([
+                'room_count' => 'Available rooms are not sufficient.',
+            ]);
         }
 
         return $availableRoomUnits;
@@ -90,8 +100,22 @@ class ReservationService implements ReservationServiceInterface
         return Reservation::with([
             'hotel',
             'roomUnits.room',
+            'payment',
         ])
             ->where('user_id', $userId)
+            ->latest()
+            ->get();
+    }
+
+    public function getHotelReservations(int $hotelId)
+    {
+        return Reservation::with([
+            'user',
+            'payment',
+            'roomUnits.room',
+            'hotel',
+        ])
+            ->where('hotel_id', $hotelId)
             ->latest()
             ->get();
     }

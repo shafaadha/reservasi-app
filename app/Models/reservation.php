@@ -27,6 +27,7 @@ class Reservation extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     public function roomUnits()
     {
         return $this->belongsToMany(
@@ -36,6 +37,7 @@ class Reservation extends Model
             'room_unit_id'
         );
     }
+
     public function hotel()
     {
         return $this->belongsTo(Hotel::class);

@@ -29,7 +29,7 @@ class ReservationController extends Controller
     public function store(StoreReservationRequest $request)
     {
 
-        $reservation = $this->reservationService->createReservation($data = $request->validated());
+        $reservation = $this->reservationService->createReservation($request->validated());
 
         $roomNumber = $reservation->roomUnits->pluck('room_number')->toArray();
 
@@ -45,5 +45,15 @@ class ReservationController extends Controller
         $reservations = $this->reservationService->getReservationByUserId(auth()->id());
 
         return response()->json($reservations);
+    }
+
+    public function hotelReservations()
+    {
+        $hotelId = auth()->user()->hotel_id;
+
+        return response()->json([
+            'message' => 'Success',
+            'data' => $this->reservationService->getHotelReservations($hotelId),
+        ]);
     }
 }
