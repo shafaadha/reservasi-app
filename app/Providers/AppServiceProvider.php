@@ -5,14 +5,18 @@ namespace App\Providers;
 use App\Models\User;
 use App\Services\AuthService;
 use App\Services\Contracts\AuthServiceInterface;
+use App\Services\Contracts\PaymentServiceInterface;
 use App\Services\Contracts\ReservationServiceInterface;
 use App\Services\Contracts\RoomServiceInterface;
+use App\Services\Contracts\RoomUnitServiceInterface;
 use App\Services\Contracts\UserServiceInterface;
+use App\Services\PaymentService;
 use App\Services\ReservationService;
 use App\Services\RoomService;
+use App\Services\RoomUnitService;
 use App\Services\UserService;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -35,6 +39,16 @@ class AppServiceProvider extends ServiceProvider
             RoomServiceInterface::class,
             RoomService::class
         );
+
+        $this->app->bind(
+            PaymentServiceInterface::class,
+            PaymentService::class
+        );
+
+        $this->app->bind(
+            RoomUnitServiceInterface::class,
+            RoomUnitService::class
+        );
     }
 
     /**
@@ -43,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::define('confirm-res', function (User $user) {
-            return $user->role === "admin";
+            return $user->role === 'admin';
         });
     }
 }

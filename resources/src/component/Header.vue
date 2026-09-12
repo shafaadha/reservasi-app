@@ -38,7 +38,7 @@ onUnmounted(() => {
 
 <template>
     <div
-        class="bg-card border-b border-gray-300 px-6 py-4 bg-white text-gray-800"
+        class="bg-card border-b border-gray-100 px-6 py-4 bg-white text-gray-800"
     >
         <div class="flex items-center justify-between">
             <div class="flex-1 max-w-md">

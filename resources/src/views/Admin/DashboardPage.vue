@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import api from "../../services/api.js";
 import { onMounted, ref } from "vue";
+import StatusBadge from "../../component/StatusBadge.vue";
 
 const dashboard = ref({
     summary: {
@@ -91,9 +92,6 @@ const getDashboardData = async () => {
     try {
         const { data } = await api.get("/dashboard");
         dashboard.value = data;
-
-        console.log(dashboard.value.unitRes);
-        console.log(data);
     } catch (err) {
         console.log(err);
     }
@@ -109,6 +107,7 @@ onMounted(() => {
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
             <!-- Cards -->
             <StatCard
+                class="bg-blue-pale"
                 title="Total Reservasi Hari Ini"
                 :icon="CalendarDaysIcon"
                 :value="dashboard.summary.totalUnit"
@@ -146,7 +145,7 @@ onMounted(() => {
                 />
             </div>
             <div
-                class="col-span-1 md:col-span-2 xl:col-span-2 bg-amber-900 h-64 rounded-lg"
+                class="col-span-1 md:col-span-2 xl:col-span-2 bg-amber-900 h-32 rounded-lg"
             >
                 Chart Reservasi
             </div>
@@ -230,7 +229,13 @@ onMounted(() => {
                                 </td>
 
                                 <td class="px-4 py-4">
-                                    {{ reservation.room_unit.room_number }}
+                                    <span
+                                        v-for="room in reservation.room_units"
+                                        :key="room.id"
+                                        class="mr-2"
+                                    >
+                                        {{ room.room_number }}
+                                    </span>
                                 </td>
 
                                 <td class="px-4 py-4">
@@ -258,32 +263,9 @@ onMounted(() => {
                                 </td>
 
                                 <td class="px-4 py-4 text-center">
-                                    <span
-                                        class="px-3 py-1 rounded-full text-xs font-semibold"
-                                        :class="{
-                                            'bg-yellow-100 text-yellow-700':
-                                                reservation.status ===
-                                                'pending',
-
-                                            'bg-green-100 text-green-700':
-                                                reservation.status ===
-                                                'confirmed',
-
-                                            'bg-blue-100 text-blue-700':
-                                                reservation.status ===
-                                                'check_in',
-
-                                            'bg-purple-100 text-purple-700':
-                                                reservation.status ===
-                                                'completed',
-
-                                            'bg-red-100 text-red-700':
-                                                reservation.status ===
-                                                'cancelled',
-                                        }"
-                                    >
-                                        {{ reservation.status }}
-                                    </span>
+                                    <StatusBadge
+                                        :status="reservation.status"
+                                    ></StatusBadge>
                                 </td>
 
                                 <td class="px-4 py-4 text-right font-semibold">
@@ -310,7 +292,6 @@ onMounted(() => {
                     </table>
                 </div>
             </div>
-            s
         </div>
     </div>
 </template>

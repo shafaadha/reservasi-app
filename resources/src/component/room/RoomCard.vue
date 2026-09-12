@@ -1,4 +1,6 @@
 <script setup>
+import BaseButton from "../button/BaseButton.vue";
+
 const props = defineProps({
     room: {
         type: Object,
@@ -43,12 +45,11 @@ const reserve = () => {
                 Rp {{ Number(room.price).toLocaleString("id-ID") }}
             </div>
 
-            <button
+            <BaseButton
+                text="Pesan"
+                className="bg-blue-500 hover:bg-blue-600 text-white"
                 @click="reserve"
-                class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-            >
-                Pesan
-            </button>
+            />
         </div>
     </div>
 </template>

@@ -2,20 +2,22 @@
 import { ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import api from "../services/api";
+import MyReservation from "./MyReservation.vue";
 
 const route = useRoute();
 const router = useRouter();
 
 const today = new Date().toISOString().split("T")[0];
-console.log(route.query.hotelId);
+console.log(route.query);
 
 const bookingData = ref({
-    hotel_id: route.query.hotelId,
+    hotelId: route.query.hotelId,
     name: route.query.name,
     roomId: route.query.roomId,
     checkin: route.query.checkin,
     checkout: route.query.checkout,
     guest: route.query.guest,
+    room: Number(route.query.room),
     pricePerNight: Number(route.query.price),
 });
 
@@ -31,33 +33,63 @@ const dayBooked = computed(() => {
 });
 
 const totalPrice = computed(() => {
-    return bookingData.value.pricePerNight * dayBooked.value;
+    return (
+        bookingData.value.pricePerNight *
+        dayBooked.value *
+        bookingData.value.room
+    );
 });
 
 const confirmBooking = async () => {
     try {
-        const res = await api.post("/reservations", {
-            hotel_id: bookingData.value.hotel_id,
+        //make reservation
+        const reservation = await api.post("/reservations", {
+            hotel_id: bookingData.value.hotelId,
             room_id: bookingData.value.roomId,
             check_in: bookingData.value.checkin,
             check_out: bookingData.value.checkout,
             guests: bookingData.value.guest,
+            room_count: bookingData.value.room,
         });
 
-        router.push({
-            name: "confirmation",
-            query: { id: res.data.reservation.id },
+        // Buat transaksi payment
+        const payment = await api.post("payments", {
+            reservation_id: reservation.data.reservation.id,
+        });
+
+        console.log(payment.data);
+
+        const snapToken = payment.data.snap_token;
+
+        window.snap.pay(payment.data.token, {
+            onSuccess(result) {
+                console.log(result);
+                router.push("/my-reservations");
+            },
+
+            onPending(result) {
+                console.log(result);
+                router.push("/my-reservations");
+            },
+
+            onError(result) {
+                console.log(result);
+                alert("Pembayaran gagal");
+            },
+
+            onClose() {
+                router.push("/my-reservations");
+            },
         });
     } catch (err) {
         console.error(err.message);
-        alert("Gagal booking");
     }
 };
 </script>
 
 <template>
     <div
-        class="max-w-2xl mx-auto mt-10 bg-white shadow-lg rounded-lg p-6 center"
+        class="max-w-2xl mx-auto mt-10 bg-white shadow-lg rounded-lg p-6 center text-black"
     >
         <h1 class="text-2xl font-bold mb-6">Detail Booking</h1>
 
@@ -77,6 +109,10 @@ const confirmBooking = async () => {
             <p>
                 <span class="font-semibold">Jumlah Tamu:</span>
                 {{ bookingData.guest }} orang
+            </p>
+            <p>
+                <span class="font-semibold">Jumlah Kamar:</span>
+                {{ bookingData.room }} kamar
             </p>
             <p>
                 <span class="font-semibold">Total Malam:</span>
@@ -118,7 +154,7 @@ const confirmBooking = async () => {
                 @click="confirmBooking"
                 class="bg-blue-400 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
-                Konfirmasi Booking
+                Bayar
             </button>
         </div>
     </div>

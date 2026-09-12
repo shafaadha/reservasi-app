@@ -9,9 +9,9 @@ import { CreditCardIcon } from "@heroicons/vue/16/solid";
 const auth = useAuthStore();
 
 const menuItems = [
-    { name: "Dashboard", icon: "🏠", to: "/admin/dashboard" },
-    // { name: "Reservation", icon: "📦", badge: 5 },
-    { name: "Room", icon: "📅", to: "/admin/rooms" },
+    { name: "Dashboard", to: "/admin/dashboard" },
+    { name: "Room", to: "/admin/rooms" },
+    { name: "Reservation", to: "/admin/reservation" },
     // { name: "Guest", icon: "💬", badge: 3 },
     // { name: "Payment", icon: CreditCardIcon, badge: 3 },
     // { name: "Inbox", icon: "📥" },
@@ -38,7 +38,7 @@ onMounted(async () => {
             <Header />
 
             <!-- MAIN -->
-            <main class="p-6">
+            <main class="p-6 bg-gray-100">
                 <router-view />
             </main>
         </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RoomRequest;
 use App\Models\Room;
 use App\Models\User;
 use App\Services\Contracts\RoomServiceInterface;
@@ -17,7 +18,7 @@ class RoomController extends Controller
         $this->roomService = $roomService;
     }
 
-    public function checkAvailability(Request $request)
+    public function checkAvailability(RoomRequest $request)
     {
 
         try {

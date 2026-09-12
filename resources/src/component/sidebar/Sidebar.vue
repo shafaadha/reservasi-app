@@ -36,7 +36,7 @@ function initials() {
 
     <!-- Sidebar -->
     <aside
-        class="fixed inset-y-0 z-50 w-64 bg-white border-r border-gray-300 flex flex-col justify-between transition-all"
+        class="fixed inset-y-0 z-50 w-64 bg-white border-r border-gray-100 flex flex-col justify-between transition-all"
         :class="[
             side === 'left' ? 'left-0' : 'right-0',
             isMobile
@@ -47,10 +47,10 @@ function initials() {
         ]"
     >
         <!-- TOP -->
-        <div>
+        <div class="flex flex-col justify-between">
             <!-- Logo -->
             <div
-                class="flex items-center gap-2 px-6 py-4 font-bold text-lg border-b border-gray-300 text-gray-800"
+                class="flex items-center gap-2 px-6 py-4 font-bold text-lg text-gray-800"
             >
                 <span class="text-blue-600"></span>
                 <div class="flex flex-col">
@@ -60,13 +60,13 @@ function initials() {
             </div>
 
             <!-- Menu -->
-            <nav class="flex flex-col gap-1 px-2 py-2 text-gray-800">
+            <nav class="flex flex-col gap-3 px-2 py-2 text-gray-600">
                 <router-link
                     v-for="item in menu"
                     :key="item.name"
                     :to="item.to"
                     class="flex items-center justify-between px-4 py-2 rounded-lg hover:bg-gray-100"
-                    active-class="bg-indigo-600 text-white"
+                    active-class="bg-blue-50 text-blue-600"
                     @click="closeMobile"
                 >
                     <div class="flex items-center gap-3">

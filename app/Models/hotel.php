@@ -8,12 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Hotel extends Model
 {
     use HasFactory;
+
     protected $fillabe = ['name'];
 
-    public function room(){
+    public function room()
+    {
         return $this->hasMany(Room::class);
     }
-    public function reservasi(){
+
+    public function reservasi()
+    {
         return $this->hasMany(Reservation::class);
     }
 }

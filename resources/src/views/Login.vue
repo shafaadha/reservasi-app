@@ -1,9 +1,65 @@
+<script setup>
+import { ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { useAuthStore } from "../stores/auth";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/outline";
+import BaseButton from "../component/button/BaseButton.vue";
+
+const router = useRouter();
+const route = useRoute();
+const auth = useAuthStore();
+
+const email = ref("");
+const password = ref("");
+const loading = ref(false);
+const errorMessages = ref("");
+const showPassword = ref(false);
+
+const handleLogin = async () => {
+    loading.value = true;
+    errorMessages.value = "";
+
+    try {
+        await auth.login({
+            email: email.value,
+            password: password.value,
+        });
+
+        const role = auth.user?.role;
+
+        if (role === "admin") {
+            return router.push("/admin/dashboard");
+        }
+
+        const { redirect, ...query } = route.query;
+
+        if (redirect) {
+            return router.push({
+                path: redirect,
+                query,
+            });
+        }
+
+        router.push("/");
+    } catch (err) {
+        console.error(err);
+        errorMessages.value = err;
+    } finally {
+        loading.value = false;
+    }
+};
+</script>
+
 <template>
-    <div class="w-full">
+    <div class="max-h-min bg-white">
         <!-- Container Form -->
         <div class="min-h-screen flex items-center justify-center">
-            <div class="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
-                <h1 class="text-2xl font-bold text-center mb-6">Login</h1>
+            <div
+                class="w-full max-w-md bg-white shadow-lg rounded-2xl border border-gray-300 p-8"
+            >
+                <h1 class="text-2xl font-bold text-center mb-6 text-gray-700">
+                    Login
+                </h1>
 
                 <div
                     v-if="errorMessages"
@@ -28,7 +84,7 @@
                                 id="email"
                                 autocomplete="email"
                                 required=""
-                                class="block w-full rounded-md bg-sky-500/5 px-3 py-1.5 text-base text-neutral-700 outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                                class="block w-full rounded-md px-3 py-2 text-neutral-700 outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6 border border-gray-500"
                             />
                         </div>
                     </div>
@@ -40,27 +96,41 @@
                             class="block text-sm/6 font-medium text-gray-500"
                             >Password</label
                         >
-                        <div class="mt-2">
+                        <div class="relative mt-2">
                             <input
-                                type="password"
+                                :type="showPassword ? 'text' : 'password'"
                                 v-model="password"
-                                name="password"
                                 id="password"
                                 autocomplete="current-password"
-                                required=""
-                                class="block w-full rounded-md bg-sky-500/5 px-3 py-1.5 text-base text-neutral-700 outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6"
+                                class="w-full rounded-md px-3 py-2 pr-10 text-neutral-700 outline-1 -outline-offset-1 outline-white/10 focus:outline-2 focus:outline-indigo-500 border border-gray-500"
                             />
+
+                            <button
+                                type="button"
+                                @click="showPassword = !showPassword"
+                                class="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
+                            >
+                                <EyeIcon v-if="!showPassword" class="w-5 h-5" />
+                                <EyeSlashIcon v-else class="w-5 h-5" />
+                            </button>
                         </div>
                     </div>
 
                     <!-- Tombol -->
                     <div class="flex justify-center mt-6">
-                        <button
+                        <!-- <button
                             type="submit"
                             class="bg-sky-500 rounded-md w-full text-white py-1.5 disabled:opacity-50"
                         >
                             {{ loading ? "Loggin in..." : "Login" }}
-                        </button>
+                        </button> -->
+
+                        <BaseButton
+                            type="submit"
+                            :disabled="loading"
+                            :text="loading ? 'Logging in...' : 'Login'"
+                            class="w-full"
+                        />
                     </div>
                 </form>
 
@@ -77,50 +147,3 @@
         </div>
     </div>
 </template>
-
-<script>
-import api, { setAuthToken } from "../services/api";
-import { useAuthStore } from "../stores/auth";
-
-export default {
-    name: "Login",
-    data() {
-        return {
-            email: "",
-            password: "",
-            loading: false,
-            errorMessages: "",
-        };
-    },
-    methods: {
-        async handleLogin() {
-            const auth = useAuthStore();
-
-            this.loading = true;
-            this.errorMessages = "";
-
-            try {
-                await auth.login({
-                    email: this.email,
-                    password: this.password,
-                });
-
-                console.log("USER:", auth.user);
-
-                const role = auth.user?.role;
-
-                if (role === "admin") {
-                    this.$router.push("/admin/dashboard");
-                } else {
-                    this.$router.push("/");
-                }
-            } catch (err) {
-                console.log("LOGIN ERROR:", err);
-                this.errorMessages = "Login gagal!";
-            } finally {
-                this.loading = false;
-            }
-        },
-    },
-};
-</script>

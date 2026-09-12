@@ -6,7 +6,7 @@ import Navigator from "../component/Navigator.vue";
 <template>
     <Navigator />
 
-    <div class="min-h-screen">
+    <div class="min-h-screen bg-gray-100">
         <router-view />
     </div>
 

@@ -53,10 +53,8 @@ const subtitleColor = {
 <template>
     <div
         :class="[
-            'bg-white rounded-lg p-5',
+            'w-full min-w-0 bg-white rounded-lg p-4 sm:p-5',
             'shadow-md',
-            // 'hover:shadow-xl',
-            // 'hover:-translate-y-1',
             'transition-all duration-300',
             'cursor-pointer',
         ]"
@@ -68,25 +66,14 @@ const subtitleColor = {
             flex-direction: column;
             gap: 6px;
             min-width: 0;
-            flex: 1;
         "
     >
-        <div
-            style="
-                display: flex;
-                justify-content: space-between;
-                align-items: flex-start;
-            "
-        >
+        <div class="flex flex-row justify-between">
             <span
-                style="
-                    font-size: 14px;
-                    color: #6b7280;
-                    line-height: 1.4;
-                    max-width: 70%;
-                "
-                >{{ title }}</span
+                class="max-w-[70%] break-words text-sm leading-[1.4] text-gray-500"
             >
+                {{ title }}
+            </span>
             <div
                 :style="[
                     iconBg[iconColor],
@@ -108,12 +95,7 @@ const subtitleColor = {
         </div>
 
         <div
-            style="
-                font-size: 28px;
-                font-weight: 700;
-                color: #111827;
-                line-height: 1.2;
-            "
+            class="break-words text-2xl font-bold leading-tight text-gray-900 sm:text-[28px]"
         >
             {{ value }}
         </div>

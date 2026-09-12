@@ -2,45 +2,20 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\RoomUnit;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Reservation;
+use App\Models\RoomUnit;
+use App\Services\Contracts\RoomUnitServiceInterface;
+use Illuminate\Http\Request;
 
 class RoomUnitController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    // public function index()
-    // {
-    //     $totalUnit = RoomUnit::count();
+    protected RoomUnitServiceInterface $roomUnitService;
 
-    //     $availableUnit = RoomUnit::where('status', 'available')->count();
-
-    //     $occupiedUnit = RoomUnit::where('status', 'occupied')->count();
-
-    //     $resToday = Reservation::whereDate('check_in', today())->count();
-
-    //     $revenueToday = Reservation::whereDate('check_in', today())
-    //         ->where('status', 'confirmed')
-    //         ->sum('total_price');
-
-    //     $roomUnits = RoomUnit::with([
-    //         'latestPaidReservation.user',
-    //         'latestPaidReservation.payment',
-    //     ])
-    //         ->paginate(10);
-
-    //     return response()->json([
-    //         'totalUnit' => $totalUnit,
-    //         'availableUnit' => $availableUnit,
-    //         'occupiedUnit' => $occupiedUnit,
-    //         'resToday' => $resToday,
-    //         'revToday' => $revenueToday,
-    //         'unitRes' => $roomUnits
-    //     ]);
-    // }
+    public function __construct(RoomUnitServiceInterface $roomUnitService)
+    {
+        $this->roomUnitService = $roomUnitService;
+    }
 
     public function index()
     {
@@ -69,8 +44,8 @@ class RoomUnitController extends Controller
 
             'latestReservations' => Reservation::with([
                 'user',
-                'roomUnit',
-                'payment'
+                'roomUnits',
+                'payment',
             ])->where('hotel_id', auth()->user()->hotel_id)
                 ->latest()
                 ->take(5)
@@ -78,10 +53,20 @@ class RoomUnitController extends Controller
         ]);
     }
 
-
     public function roomReservation()
     {
         $rooms = RoomUnit::with('reservation')->get();
+    }
+
+    public function room()
+    {
+        $hotelId = auth()->user()->hotel_id;
+        $roomUnits = $this->roomUnitService->getAllRoomUnit($hotelId);
+
+        return response()->json([
+            'message' => 'Success',
+            'data' => $roomUnits,
+        ]);
     }
 
     /**
