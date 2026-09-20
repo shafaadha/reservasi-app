@@ -1,7 +1,5 @@
 <template>
-    <div
-        class="min-h-screen flex flex-col items-center justify-center bg-gray-50"
-    >
+    <div class="flex flex-col items-center justify-center bg-gray-50">
         <h1 class="text-5xl font-bold mb-4">403</h1>
         <p class="text-xl mb-4">Access Denied</p>
         <button @click="goBack" class="text-blue-600 hover:underline">

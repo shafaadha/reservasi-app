@@ -15,12 +15,11 @@ class RoomUnitService implements RoomUnitServiceInterface
         //
     }
 
-    public function getAllRoomUnit(int $hotelId)
+    public function getAllRoomUnit(int $hotelId, $perPage = 10)
     {
         return RoomUnit::with('room')
             ->whereHas('room', function ($query) use ($hotelId) {
                 $query->where('hotel_id', $hotelId);
-            })
-            ->get();
+            })->paginate($perPage);
     }
 }

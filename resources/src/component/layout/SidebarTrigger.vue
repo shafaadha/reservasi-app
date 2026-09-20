@@ -1,5 +1,5 @@
 <script setup>
-import { useSidebar } from '../composables/useSidebar';
+import { useSidebar } from "../../composables/useSidebar";
 
 const { toggleSidebar } = useSidebar();
 </script>

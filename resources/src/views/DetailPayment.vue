@@ -65,11 +65,11 @@ onMounted(async () => {
             >
                 <!-- LEFT -->
                 <div class="flex flex-col gap-4 md:flex-1">
-                    <div class="bg-white border rounded-lg overflow-hidden">
+                    <div class="bg-white border rounded-lg">
                         <div class="relative h-52">
                             <div
                                 v-if="loading"
-                                class="bg-gray-300 h-full w-full animate-pulse"
+                                class="bg-gray-300 w-full animate-pulse"
                             ></div>
 
                             <img

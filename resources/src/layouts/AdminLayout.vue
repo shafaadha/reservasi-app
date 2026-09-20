@@ -1,8 +1,8 @@
 <script setup>
 import { reactive, onMounted } from "vue";
-import Sidebar from "../component/sidebar/Sidebar.vue";
-import SideBarProvider from "../component/sidebar/SideBarProvider.vue";
-import Header from "../component/Header.vue";
+import Sidebar from "../component/layout/sidebar/Sidebar.vue";
+import SideBarProvider from "../component/layout/sidebar/SideBarProvider.vue";
+import Header from "../component/layout/Header.vue";
 import { useAuthStore } from "../stores/auth";
 import { CreditCardIcon } from "@heroicons/vue/16/solid";
 

@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 import { useAuthStore } from "../../stores/auth";
 import api from "../../services/api";
 import { useFormatter } from "../../composables/useFormatter";
-import StatusBadge from "../../component/StatusBadge.vue";
+import StatusBadge from "../../component/common/StatusBadge.vue";
 import BaseButton from "../../component/button/BaseButton.vue";
 
 const auth = useAuthStore();

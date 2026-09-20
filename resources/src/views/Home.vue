@@ -1,93 +1,73 @@
-<script>
-import { MagnifyingGlassCircleIcon } from "@heroicons/vue/16/solid";
+<script setup lang="ts">
+import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import QuantityPicker from "../component/QuantityPicker.vue";
+import Alert from "../component/common/Alert.vue";
 
-export default {
-    name: "Home",
-    data() {
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(today.getDate() + 1);
+const router = useRouter();
 
-        return {
-            checkin: "",
-            checkout: "",
-            guest: "",
-            room: "",
-            today: today.toISOString().split("T")[0],
-            tomorrow: tomorrow.toISOString().split("T")[0],
-            errorMessage: "",
-            loading: false,
-        };
-    },
+const checkin = ref("");
+const checkout = ref("");
+const guest = ref(1);
+const room = ref(1);
 
-    computed: {
-        minCheckout() {
-            if (!this.checkin) return this.tomorrow;
+const errorMessage = ref("");
+const loading = ref(false);
 
-            const date = new Date(this.checkin);
-            date.setDate(date.getDate() + 1);
+const today = new Date();
 
-            return date.toISOString().split("T")[0];
-        },
-    },
+const tomorrow = new Date(today);
+tomorrow.setDate(today.getDate() + 1);
 
-    methods: {
-        async handleSearch() {
-            this.errorMessage = "";
-            this.loading = true;
+const todayString = today.toISOString().split("T")[0];
+const tomorrowString = tomorrow.toISOString().split("T")[0];
 
-            try {
-                if (
-                    !this.checkin ||
-                    !this.checkout ||
-                    !this.guest ||
-                    !this.room
-                ) {
-                    this.errorMessage = "Please fill in all fields.";
-                    return;
-                }
+const minCheckout = computed(() => {
+    if (!checkin.value) return tomorrowString;
 
-                if (new Date(this.checkout) <= new Date(this.checkin)) {
-                    this.errorMessage = "Check out must be after check in.";
-                    return;
-                }
+    const date = new Date(checkin.value);
+    date.setDate(date.getDate() + 1);
 
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
+    return date.toISOString().split("T")[0];
+});
 
-                if (this.guest <= 0 || this.room <= 0) {
-                    this.errorMessage =
-                        "Guest and Room must be positive numbers.";
-                    return;
-                }
+async function handleSearch() {
+    errorMessage.value = "";
+    loading.value = true;
 
-                if (isNaN(this.guest) || isNaN(this.room)) {
-                    this.errorMessage = "Guest and Room must be valid numbers.";
-                    return;
-                }
+    try {
+        if (!checkin.value || !checkout.value || !guest.value || !room.value) {
+            errorMessage.value = "Please fill in all fields.";
+            return;
+        }
 
-                this.$router.push({
-                    name: "available-room",
-                    query: {
-                        checkin: this.checkin,
-                        checkout: this.checkout,
-                        guest: this.guest,
-                        room: this.room,
-                    },
-                });
-            } catch (err) {
-                this.errorMessage = "Something went wrong. Please try again.";
-                console.error(err);
-            } finally {
-                this.loading = false;
-            }
-        },
-    },
-};
+        if (new Date(checkout.value) <= new Date(checkin.value)) {
+            errorMessage.value = "Check out must be after check in.";
+            return;
+        }
+
+        router.push({
+            name: "available-room",
+            query: {
+                checkin: checkin.value,
+                checkout: checkout.value,
+                guest: guest.value,
+                room: room.value,
+            },
+        });
+    } catch (err) {
+        errorMessage.value = "Something went wrong. Please try again.";
+        console.error(err);
+    } finally {
+        loading.value = false;
+    }
+}
 </script>
 
 <template>
-    <div class="w-full min-h-screen bg-white">
+    <div class="w-full bg-white pb-32">
         <div class="relative h-80">
             <img
                 src="../assets/picture/home.jpg"
@@ -97,94 +77,100 @@ export default {
 
             <!-- Card -->
             <div
-                class="absolute left-1/2 bottom-0 transform -translate-x-1/2 translate-y-1/2 bg-white shadow-lg rounded-2xl p-6 md:p-8 z-10 w-[90%] md:w-auto"
+                class="absolute left-1/2 bottom-0 transform -translate-x-1/2 translate-y-1/2 z-10 w-full max-w-5xl px-4"
             >
+                <!-- Alert -->
                 <div
-                    class="grid grid-cols-1 sm:grid-cols-7 gap-4 sm:gap-6 items-end"
+                    v-if="errorMessage"
+                    class="mt-4 p-3 rounded-lg bg-red-100 border border-red-300 text-red-700 text-sm text-center"
+                >
+                    <Alert></Alert>
+                </div>
+                <form
+                    @submit.prevent="handleSearch"
+                    class="bg-white rounded-xl shadow-2xl shadow-black/20 px-6 py-6 grid grid-cols-2 md:grid-cols-5 gap-4 items-end"
                 >
                     <!-- Check In -->
-                    <div
-                        class="col-span-1 sm:col-span-2 flex flex-col space-y-1"
-                    >
-                        <label for="checkin" class="text-gray-800 font-medium"
-                            >Check In</label
+                    <div class="flex flex-col gap-1.5">
+                        <label
+                            for="checkin"
+                            class="text-sm font-medium text-stone-600 tracking-wider"
                         >
+                            Check In
+                        </label>
+
                         <input
                             v-model="checkin"
                             type="date"
                             id="checkin"
-                            class="w-full h-12 px-4 rounded-md border border-gray-300"
                             :min="today"
+                            class="border border-stone-200 rounded-lg px-3 py-2.5 text-sm text-stone-700 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-colors"
                         />
                     </div>
 
                     <!-- Check Out -->
-                    <div
-                        class="col-span-1 sm:col-span-2 flex flex-col space-y-1"
-                    >
-                        <label for="checkout" class="text-gray-800 font-medium"
-                            >Check Out</label
+                    <div class="flex flex-col gap-1.5">
+                        <label
+                            for="checkout"
+                            class="text-sm font-medium text-stone-600 tracking-wider"
                         >
+                            Check Out
+                        </label>
+
                         <input
                             v-model="checkout"
                             type="date"
                             id="checkout"
-                            class="w-full h-12 px-4 rounded-md border border-gray-300"
                             :min="minCheckout"
+                            class="border border-stone-200 rounded-lg px-3 py-2.5 text-sm text-stone-700 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-colors"
                         />
                     </div>
 
                     <!-- Guest -->
-                    <div
-                        class="col-span-1 sm:col-span-1 flex flex-col space-y-1"
-                    >
-                        <label for="guest" class="text-gray-800 font-medium"
-                            >Guest</label
+                    <div class="flex flex-col gap-1.5">
+                        <label
+                            for="guest"
+                            class="text-sm font-medium text-stone-600 tracking-wider"
                         >
-                        <input
+                            Guest
+                        </label>
+
+                        <QuantityPicker
                             v-model="guest"
-                            type="number"
-                            id="guest"
-                            class="w-full h-12 px-4 rounded-md border border-gray-300"
-                        />
+                            :min-value="1"
+                            :max-value="10"
+                        ></QuantityPicker>
                     </div>
 
                     <!-- Room -->
-                    <div
-                        class="col-span-1 sm:col-span-1 flex flex-col space-y-1"
-                    >
-                        <label for="room" class="text-gray-800 font-medium"
-                            >Room</label
+                    <div class="flex flex-col gap-1.5">
+                        <label
+                            for="room"
+                            class="text-sm font-medium text-stone-600 tracking-wider"
                         >
-                        <input
+                            Room
+                        </label>
+
+                        <QuantityPicker
                             v-model="room"
-                            type="number"
-                            id="room"
-                            class="w-full h-12 px-4 rounded-md border border-gray-300"
-                        />
+                            :min-value="1"
+                            :max-value="10"
+                        ></QuantityPicker>
                     </div>
 
-                    <!-- Tombol Find -->
+                    <!-- Button -->
                     <button
-                        class="col-span-1 sm:col-span-1 bg-cyan-100 hover:bg-cyan-200 transition rounded-md p-1 flex items-center justify-center"
-                        @click="handleSearch"
+                        type="submit"
+                        class="bg-blue-500 hover:bg-blue-600 md:col-span-1 col-span-2 text-white rounded-lg py-2.5 px-6 text-sm font-semibold tracking-wide transition-colors duration-200 flex items-center justify-center gap-2 shadow-md"
                     >
-                        <MagnifyingGlassCircleIcon
-                            class="w-6 h-6 text-cyan-700"
+                        <FontAwesomeIcon
+                            :icon="faMagnifyingGlass"
+                            class="w-5"
                         />
+                        Search
                     </button>
-                </div>
-
-                <!-- Alert Message -->
-                <div
-                    v-if="errorMessage"
-                    class="mt-4 p-3 rounded-md bg-red-100 border border-red-400 text-red-700 text-sm text-center"
-                >
-                    {{ errorMessage }}
-                </div>
+                </form>
             </div>
         </div>
     </div>
 </template>
-
-<style scoped></style>

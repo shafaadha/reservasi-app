@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import api from "../../services/api.js";
 import { onMounted, ref } from "vue";
-import StatusBadge from "../../component/StatusBadge.vue";
+import StatusBadge from "../../component/common/StatusBadge.vue";
 
 const dashboard = ref({
     summary: {

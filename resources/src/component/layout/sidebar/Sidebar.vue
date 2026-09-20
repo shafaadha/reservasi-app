@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from "vue";
-import { useSidebar } from "../../composables/useSidebar";
+import { useSidebar } from "../../../composables/useSidebar";
 import { RouterLink, useRouter } from "vue-router";
 
 const props = defineProps({

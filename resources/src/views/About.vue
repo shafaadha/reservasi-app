@@ -42,7 +42,7 @@ const features = [
 
         <!-- Hero -->
         <div
-            class="relative bg-gradient-to-r from-amber-50 via-white to-sky-50 rounded-2xl overflow-hidden shadow-lg"
+            class="relative bg-gradient-to-r from-amber-50 via-white to-sky-50 rounded-2xl hidden shadow-lg"
         ></div>
 
         <!-- Features -->

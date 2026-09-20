@@ -6,7 +6,7 @@ const bookingId = route.query.id;
 </script>
 
 <template>
-    <div class="max-h-screen mx-auto mt-10 bg-white shadow-lg rounded-lg p-6 center">
+    <div class="mx-auto mt-10 bg-white shadow-lg rounded-lg p-6 center">
         <h1>Booking Berhasil</h1>
         <p>ID Booking: {{ bookingId }}</p>
     </div>

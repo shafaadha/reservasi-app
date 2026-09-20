@@ -13,13 +13,18 @@ import DashboardPage from "../views/Admin/DashboardPage.vue";
 import { useAuthStore } from "../stores/auth";
 import RoomPage from "../views/Admin/RoomPage.vue";
 import ReservationPage from "../views/Admin/ReservationPage.vue";
-import Unauthorized from "../component/Unauthorized.vue";
-import NotFound from "../component/NotFound.vue";
+import Unauthorized from "../views/Unauthorized.vue";
+import NotFound from "../views/NotFound.vue";
 import { setAuthToken } from "../services/api.js";
 import DetailPayment from "../views/DetailPayment.vue";
 
 const routes = [
-    { path: "/login", name: "login", component: Login },
+    {
+        path: "/login",
+        name: "login",
+        component: Login,
+        meta: { hideFooter: true },
+    },
     { path: "/register", name: "register", component: Register },
     { path: "/rooms", name: "rooms", component: RoomList },
     {

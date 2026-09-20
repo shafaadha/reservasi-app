@@ -27,7 +27,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-gray-100">
+    <div class="bg-gray-100">
         <div class="text-gray-700 px-5 my-5 font-bold text-2xl">Hotel List</div>
 
         <div
@@ -39,12 +39,12 @@ onMounted(async () => {
                 class="px-5 mb-5 w-full flex justify-center"
             >
                 <div
-                    class="max-w-sm w-full rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                    class="max-w-sm w-full rounded-lg shadow-sm hover:shadow-md transition-shadow"
                 >
-                    <div class="h-40 w-full overflow-hidden">
+                    <div class="h-40 w-full">
                         <div
                             v-if="loading"
-                            class="bg-gray-300 h-full w-full animate-pulse"
+                            class="bg-gray-300 w-full animate-pulse"
                         ></div>
 
                         <img

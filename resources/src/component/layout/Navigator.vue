@@ -1,8 +1,8 @@
 <script setup>
 import { RouterLink, useRouter } from "vue-router";
 import { computed } from "vue";
-import api, { setAuthToken } from "../services/api";
-import { useAuthStore } from "../stores/auth";
+import api, { setAuthToken } from "../../services/api";
+import { useAuthStore } from "../../stores/auth";
 
 const router = useRouter();
 const auth = useAuthStore();
