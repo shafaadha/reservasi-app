@@ -58,10 +58,18 @@ class RoomUnitController extends Controller
         $rooms = RoomUnit::with('reservation')->get();
     }
 
-    public function room()
+    public function room(Request $request)
     {
-        $hotelId = auth()->user()->hotel_id;
-        $roomUnits = $this->roomUnitService->getAllRoomUnit($hotelId);
+        // $hotelId = auth()->user()->hotel_id;
+
+        $perPage = $request->integer('per_page', 10);
+
+        $hotelId = 2;
+
+        $roomUnits = $this->roomUnitService->getAllRoomUnit(
+            $hotelId,
+            $perPage
+        );
 
         return response()->json([
             'message' => 'Success',

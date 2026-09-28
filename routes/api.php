@@ -40,6 +40,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reservationList', [ReservationController::class, 'index']);
     Route::get('/dashboard', [RoomUnitController::class, 'index']);
     Route::post('/payments', [PaymentController::class, 'create']);
-    Route::get('/hotel/roomunits', [RoomUnitController::class, 'room']);
+
     Route::get('/hotel/reservations', [ReservationController::class, 'hotelReservations']);
 });
+
+Route::get('/hotel/roomunits', [RoomUnitController::class, 'room']);
