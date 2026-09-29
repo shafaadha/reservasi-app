@@ -20,6 +20,11 @@ class ReservationService implements ReservationServiceInterface
         //
     }
 
+    public function checkReservationId(int $reservationId)
+    {
+        return Reservation::findOrFail($reservationId);
+    }
+
     public function createReservation(array $data)
     {
         return DB::transaction(function () use ($data) {
@@ -118,5 +123,13 @@ class ReservationService implements ReservationServiceInterface
             ->where('hotel_id', $hotelId)
             ->latest()
             ->get();
+    }
+
+    public function updateStatus(int $reservationId)
+    {
+        return Reservation::where('id', $reservationId)
+            ->update([
+                'status' => 'confirmed',
+            ]);
     }
 }

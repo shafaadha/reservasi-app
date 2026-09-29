@@ -24,7 +24,7 @@ const statusClass = (status) => {
 </script>
 
 <template>
-    <div class="rounded-2xl shadow p-5 border border-gray-200">
+    <div class="rounded-2xl shadow p-5 bg-white text-gray-800">
         <div class="flex justify-between items-center mb-2">
             <p class="font-medium">
                 {{ formatDate(reservation.check_in) }}

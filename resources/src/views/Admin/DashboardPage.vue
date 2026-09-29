@@ -12,6 +12,8 @@ import api from "../../services/api.js";
 import { onMounted, ref } from "vue";
 import StatusBadge from "../../component/common/StatusBadge.vue";
 
+const loading = ref(true);
+
 const dashboard = ref({
     summary: {
         totalUnit: 0,
@@ -93,7 +95,9 @@ const getDashboardData = async () => {
         const { data } = await api.get("/dashboard");
         dashboard.value = data;
     } catch (err) {
-        console.log(err);
+        console.error(err);
+    } finally {
+        loading.value = false;
     }
 };
 
@@ -215,72 +219,134 @@ onMounted(() => {
                         </thead>
 
                         <tbody class="divide-y divide-gray-100">
-                            <tr
-                                v-for="reservation in dashboard.latestReservations"
-                                :key="reservation.id"
-                                class="hover:bg-gray-50 transition"
+                            <template v-if="loading">
+                                <tr
+                                    v-for="n in 2"
+                                    :key="n"
+                                    class="animate-pulse"
+                                >
+                                    <td class="px-4 py-4">
+                                        <div
+                                            class="h-4 w-10 rounded bg-gray-200"
+                                        ></div>
+                                    </td>
+
+                                    <td class="px-4 py-4">
+                                        <div
+                                            class="h-4 w-28 rounded bg-gray-200"
+                                        ></div>
+                                    </td>
+
+                                    <td class="px-4 py-4">
+                                        <div class="flex gap-2">
+                                            <div
+                                                class="h-5 w-10 rounded bg-gray-200"
+                                            ></div>
+                                            <div
+                                                class="h-5 w-10 rounded bg-gray-200"
+                                            ></div>
+                                        </div>
+                                    </td>
+
+                                    <td class="px-4 py-4">
+                                        <div
+                                            class="h-4 w-24 rounded bg-gray-200"
+                                        ></div>
+                                    </td>
+
+                                    <td class="px-4 py-4">
+                                        <div
+                                            class="h-4 w-24 rounded bg-gray-200"
+                                        ></div>
+                                    </td>
+
+                                    <td class="px-4 py-4">
+                                        <div class="flex justify-center">
+                                            <div
+                                                class="h-6 w-20 rounded-full bg-gray-200"
+                                            ></div>
+                                        </div>
+                                    </td>
+
+                                    <td class="px-4 py-4">
+                                        <div
+                                            class="ml-auto h-4 w-28 rounded bg-gray-200"
+                                        ></div>
+                                    </td>
+                                </tr>
+                            </template>
+                            <template
+                                v-else-if="dashboard.latestReservations.length"
                             >
-                                <td class="px-4 py-4 font-medium text-gray-700">
-                                    RES-{{ reservation.id }}
-                                </td>
-
-                                <td class="px-4 py-4">
-                                    {{ reservation.user.name }}
-                                </td>
-
-                                <td class="px-4 py-4">
-                                    <span
-                                        v-for="room in reservation.room_units"
-                                        :key="room.id"
-                                        class="mr-2"
+                                <tr
+                                    v-for="reservation in dashboard.latestReservations"
+                                    :key="reservation.id"
+                                    class="hover:bg-gray-50 transition"
+                                >
+                                    <td
+                                        class="px-4 py-4 font-medium text-gray-700"
                                     >
-                                        {{ room.room_number }}
-                                    </span>
-                                </td>
+                                        RES-{{ reservation.id }}
+                                    </td>
 
-                                <td class="px-4 py-4">
-                                    {{
-                                        new Date(
-                                            reservation.check_in,
-                                        ).toLocaleDateString("id-ID", {
-                                            day: "2-digit",
-                                            month: "short",
-                                            year: "numeric",
-                                        })
-                                    }}
-                                </td>
+                                    <td class="px-4 py-4">
+                                        {{ reservation.user.name }}
+                                    </td>
 
-                                <td class="px-4 py-4">
-                                    {{
-                                        new Date(
-                                            reservation.check_out,
-                                        ).toLocaleDateString("id-ID", {
-                                            day: "2-digit",
-                                            month: "short",
-                                            year: "numeric",
-                                        })
-                                    }}
-                                </td>
+                                    <td class="px-4 py-4">
+                                        <span
+                                            v-for="room in reservation.room_units"
+                                            :key="room.id"
+                                            class="mr-2"
+                                        >
+                                            {{ room.room_number }}
+                                        </span>
+                                    </td>
 
-                                <td class="px-4 py-4 text-center">
-                                    <StatusBadge
-                                        :status="reservation.status"
-                                    ></StatusBadge>
-                                </td>
+                                    <td class="px-4 py-4">
+                                        {{
+                                            new Date(
+                                                reservation.check_in,
+                                            ).toLocaleDateString("id-ID", {
+                                                day: "2-digit",
+                                                month: "short",
+                                                year: "numeric",
+                                            })
+                                        }}
+                                    </td>
 
-                                <td class="px-4 py-4 text-right font-semibold">
-                                    Rp
-                                    {{
-                                        Number(
-                                            reservation.total_price,
-                                        ).toLocaleString("id-ID")
-                                    }}
-                                </td>
-                            </tr>
+                                    <td class="px-4 py-4">
+                                        {{
+                                            new Date(
+                                                reservation.check_out,
+                                            ).toLocaleDateString("id-ID", {
+                                                day: "2-digit",
+                                                month: "short",
+                                                year: "numeric",
+                                            })
+                                        }}
+                                    </td>
 
-                            <tr
-                                v-if="dashboard.latestReservations.length === 0"
-                            >
+                                    <td class="px-4 py-4 text-center">
+                                        <StatusBadge
+                                            :status="reservation.status"
+                                        ></StatusBadge>
+                                    </td>
+
+                                    <td
+                                        class="px-4 py-4 text-right font-semibold"
+                                    >
+                                        Rp
+                                        {{
+                                            Number(
+                                                reservation.total_price,
+                                            ).toLocaleString("id-ID")
+                                        }}
+                                    </td>
+                                </tr>
+                            </template>
+
+                            <tr v-else>
                                 <td
                                     colspan="7"
                                     class="text-center py-8 text-gray-400"

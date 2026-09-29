@@ -13,8 +13,9 @@ class RoomUnit extends Model
         'room_id',
         'room_number',
         'status',
-        'cleaning_status'
+        'cleaning_status',
     ];
+
     public function room()
     {
         return $this->belongsTo(Room::class);
@@ -30,12 +31,20 @@ class RoomUnit extends Model
         );
     }
 
-
     public function roomReservation()
     {
         return $this->belongsTo(ReservationRoom::class);
     }
 
+    public function currentReservation()
+    {
+        return $this->belongsToMany(
+            Reservation::class,
+            'reservation_rooms',
+            'room_unit_id',
+            'reservation_id'
+        )->where('status', 'checked_in');
+    }
 
     public function latestPaidReservation()
     {

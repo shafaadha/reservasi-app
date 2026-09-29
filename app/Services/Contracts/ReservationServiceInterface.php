@@ -15,4 +15,8 @@ interface ReservationServiceInterface
     public function getReservationByUserId(int $userId);
 
     public function getHotelReservations(int $hotelId);
+
+    public function checkReservationId(int $reservationId);
+
+    public function updateStatus(int $reservationId);
 }

@@ -52,9 +52,7 @@ const handleLogin = async () => {
 </script>
 
 <template>
-    <div
-        class="min-h-screen w-full bg-white flex items-center justify-center px-4"
-    >
+    <div class="min-h-screen w-full bg-white flex items-center justify-center">
         <!-- Container Form -->
         <div
             class="w-full max-w-md bg-white shadow-lg rounded-2xl border border-gray-300 p-8"

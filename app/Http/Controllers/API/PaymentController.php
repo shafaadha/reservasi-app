@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use App\Models\Reservation;
 use App\Services\Contracts\PaymentServiceInterface;
+use App\Services\Contracts\RoomUnitServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -15,9 +16,12 @@ class PaymentController extends Controller
 {
     protected PaymentServiceInterface $paymentService;
 
-    public function __construct(PaymentServiceInterface $paymentService)
+    protected RoomUnitServiceInterface $roomUnitService;
+
+    public function __construct(PaymentServiceInterface $paymentService, RoomUnitServiceInterface $roomUnitService)
     {
         $this->paymentService = $paymentService;
+        $this->roomUnitService = $roomUnitService;
     }
 
     public function create(Request $request)

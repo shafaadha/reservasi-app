@@ -26,11 +26,13 @@ const handleRegister = async () => {
 </script>
 
 <template>
-    <div class="container">
+    <div class="p-8">
         <!-- Container Form -->
         <div class="flex justify-center mt-4 px-4">
             <div class="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
-                <h1 class="text-2xl font-bold text-center mb-6">Register</h1>
+                <h1 class="text-2xl font-bold text-center mb-6 text-gray-700">
+                    Register
+                </h1>
 
                 <form @submit.prevent="handleRegister" class="space-y-5">
                     <!-- Name -->
@@ -50,9 +52,7 @@ const handleRegister = async () => {
 
                     <!-- Email -->
                     <div>
-                        <label
-                            for="email"
-                            class="block text-sm/6 font-medium text-gray-500"
+                        <label for="email" class="block text-sm/6"
                             >Email address</label
                         >
                         <div class="mt-2">

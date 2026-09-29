@@ -56,4 +56,17 @@ class ReservationController extends Controller
             'data' => $this->reservationService->getHotelReservations($hotelId),
         ]);
     }
+
+    public function updateStatus($reservationId)
+    {
+        $reservation = $this->reservationService->checkReservationId(
+            $reservationId
+        );
+
+        $this->reservationService->updateStatus($reservation->id);
+
+        return response()->json([
+            'message' => 'Reservation status updated successfully',
+        ]);
+    }
 }

@@ -62,13 +62,12 @@ class RoomUnitController extends Controller
     {
         // $hotelId = auth()->user()->hotel_id;
 
-        $perPage = $request->integer('per_page', 10);
+        // $perPage = $request->integer('per_page', 10);
 
-        $hotelId = 2;
+        $hotelId = 1;
 
         $roomUnits = $this->roomUnitService->getAllRoomUnit(
             $hotelId,
-            $perPage
         );
 
         return response()->json([

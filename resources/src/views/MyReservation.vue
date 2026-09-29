@@ -29,7 +29,9 @@ const paymentDetail = (reservation) => {
 
 <template>
     <section class="max-w-3xl mx-auto p-6">
-        <h1 class="text-2xl font-semibold mb-4">My Reservations</h1>
+        <h1 class="text-2xl font-semibold mb-4 text-gray-700">
+            My Reservations
+        </h1>
 
         <ReservationCardSkeleton v-if="loading" :count="5" />
 

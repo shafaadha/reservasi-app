@@ -25,7 +25,14 @@ const routes = [
         component: Login,
         meta: { hideFooter: true },
     },
-    { path: "/register", name: "register", component: Register },
+    {
+        path: "/register",
+        name: "register",
+        component: Register,
+        meta: {
+            hideFooter: true,
+        },
+    },
     { path: "/rooms", name: "rooms", component: RoomList },
     {
         path: "/reservations",

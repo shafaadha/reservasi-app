@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('hotel_id')->constrained()->onDelete('cascade');
+            $table->enum('book_type', [
+                'online', 'offline',
+            ])->default('offline');
             $table->date('check_in');
             $table->date('check_out');
             $table->integer('guests')->default(1);
@@ -24,7 +27,7 @@ return new class extends Migration
                 'confirmed',
                 'checked_in',
                 'checked_out',
-                'cancelled'
+                'cancelled',
             ])->default('pending');
             $table->timestamps();
         });

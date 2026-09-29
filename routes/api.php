@@ -45,3 +45,4 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 
 Route::get('/hotel/roomunits', [RoomUnitController::class, 'room']);
+Route::put('/reservation/{reservationId}/status', [ReservationController::class, 'updateStatus']);

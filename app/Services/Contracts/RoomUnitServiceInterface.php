@@ -4,5 +4,5 @@ namespace App\Services\Contracts;
 
 interface RoomUnitServiceInterface
 {
-    public function getAllRoomUnit(int $id, int $perPage = 10);
+    public function getAllRoomUnit(int $id);
 }

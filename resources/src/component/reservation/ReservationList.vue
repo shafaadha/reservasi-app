@@ -12,7 +12,7 @@ const emit = defineEmits(["payment"]);
 </script>
 
 <template>
-    <div class="space-y-4">
+    <div class="min-h-full">
         <ReservationCard
             v-for="reservation in reservations"
             :key="reservation.id"
