@@ -1,19 +1,18 @@
-// import { inject } from "vue";
+import { ref } from "vue";
+import { useIsMobile } from "./useIsMobile";
 
-// export const SIDEBAR_KEY = Symbol("SIDEBAR_KEY");
-
-// export function useSidebar() {
-//     const ctx = inject(SIDEBAR_KEY);
-
-//     if (!ctx) {
-//         throw new Error("useSidebar must be used inside <SidebarProvider>.");
-//     }
-
-//     return ctx;
-// }
-
-import { inject } from "vue";
+const openMobile = ref(false);
 
 export function useSidebar() {
-    return inject("sidebar");
+    const isMobile = useIsMobile();
+
+    function setOpenMobile(value) {
+        openMobile.value = value;
+    }
+
+    return {
+        isMobile,
+        openMobile,
+        setOpenMobile,
+    };
 }

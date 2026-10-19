@@ -33,12 +33,12 @@ onMounted(async () => {
         <Sidebar :menu="menuItems" :user="auth.user" />
 
         <!-- CONTENT -->
-        <div class="ml-64 flex flex-col min-h-screen">
+        <div class="ml-0 flex min-h-screen min-w-0 flex-col md:ml-64">
             <!-- HEADER -->
             <Header />
 
             <!-- MAIN -->
-            <main class="p-6 bg-gray-100">
+            <main class="min-w-0 flex-1 bg-gray-100 p-4 md:p-6">
                 <router-view />
             </main>
         </div>

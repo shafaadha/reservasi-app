@@ -17,6 +17,7 @@ import Unauthorized from "../views/Unauthorized.vue";
 import NotFound from "../views/NotFound.vue";
 import { setAuthToken } from "../services/api.js";
 import DetailPayment from "../views/DetailPayment.vue";
+import CreateReservation from "../views/Admin/CreateReservation.vue";
 
 const routes = [
     {
@@ -95,6 +96,13 @@ const routes = [
         path: "/admin/reservation",
         name: "roomRes",
         component: ReservationPage,
+        meta: { requiresAuth: true, layout: "admin", role: "admin" },
+    },
+
+    {
+        path: "/admin/reservation/create",
+        name: "createReservation",
+        component: CreateReservation,
         meta: { requiresAuth: true, layout: "admin", role: "admin" },
     },
     {

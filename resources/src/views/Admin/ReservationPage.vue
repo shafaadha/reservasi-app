@@ -13,6 +13,9 @@ import BaseInput from "../../component/common/BaseInput.vue";
 import BaseSelect from "../../component/common/BaseSelect.vue";
 import ActionMenu from "../../component/common/ActionMenu.vue";
 import TableSkeleton from "../../component/common/TableSkeleton.vue";
+import Alert from "../../component/common/Alert.vue";
+import router from "../../router/index.js";
+
 
 const auth = useAuthStore();
 const { formatDate, formatCurrency } = useFormatter();
@@ -24,6 +27,29 @@ const search = ref("");
 const searchDate = ref([]);
 
 const selectedStatus = ref("");
+
+const createRes = () => {
+    router.push({ name: "createReservation" })
+}
+const alert = ({
+    show: false,
+    type: "success",
+    title: "",
+    message: ""
+});
+
+const showAlert = (type, title, message) => {
+    alert.value = {
+        show: true,
+        type,
+        title,
+        message
+    }
+}
+
+const hideAlert = () => {
+    alert.value.show = false;
+}
 
 const openMenu = ref(null);
 const menuPosition = ref({
@@ -90,8 +116,7 @@ const getActionItems = (reservation) => {
     ];
 
     if (
-        reservation.status === "pending" ||
-        reservation.status === "confirmed"
+        reservation.status === "pending"
     ) {
         items.push({
             label: "Edit",
@@ -110,11 +135,25 @@ const getActionItems = (reservation) => {
     ) {
         items.push({
             label: "Confirm",
-            action: () => editReservation(reservation),
+            action: () => confirmReservation(reservation),
         });
     }
 
     return items;
+};
+
+const isFiltering = computed(() => {
+    return (
+        search.value.trim() !== "" ||
+        selectedStatus.value !== "" ||
+        searchDate.value?.some((date) => date !== null)
+    );
+});
+
+const clearFilters = () => {
+    search.value = "";
+    searchDate.value = [];
+    selectedStatus.value = "";
 };
 
 const selectedReservation = computed(() =>
@@ -144,6 +183,31 @@ const deleteReservation = (reservation) => {
     console.log("Delete:", reservation);
     openMenu.value = null;
 };
+
+const confirmReservation = async (reservation) => {
+    try {
+        const response = await api.put(`/reservation/${reservation.id}/status`);
+        await getReservation();
+
+        showAlert(
+            "success", "Reservation Confirmed", `Reservation ${reservation.id} confirmed successfully`
+        )
+    }
+    catch (error) {
+        console.error(
+            "Failed to update reservation status:",
+            error.response?.data || error.message
+        );
+
+        showAlert(
+            "error",
+            "Confirmation Failed",
+            error.response?.data?.message ||
+            "Terjadi kesalahan saat mengonfirmasi reservasi."
+        );
+    }
+
+}
 
 const getReservation = async () => {
     try {
@@ -178,6 +242,10 @@ const filteredReservation = computed(() => {
             !selectedStatus.value ||
             reservation.status === selectedStatus.value;
 
+        const checkIn = reservation.check_in
+            ? formatDate(reservation.check_in)
+            : null;
+
         const matchDate =
             (!startDate || checkIn >= startDate) &&
             (!endDate || checkIn <= endDate);
@@ -200,6 +268,7 @@ onMounted(async () => {
         <div class="flex flex-row justify-between">
             <div class="flex items-center justify-between mb-5">
                 <div>
+                    <Alert v-if="alert.show" :type="alert.type" :title="alert.title" :message="alert.message" />
                     <h2 class="text-xl font-bold text-gray-800">
                         Reservations List
                     </h2>
@@ -209,7 +278,7 @@ onMounted(async () => {
                 </div>
             </div>
             <div>
-                <BaseButton text="Reservation"></BaseButton>
+                <BaseButton text="+ Reservation" @click="createRes" />
             </div>
         </div>
 
@@ -229,9 +298,8 @@ onMounted(async () => {
             <div class="col-span-1">
                 <BaseSelect v-model="selectedStatus" :options="statusOptions" />
             </div>
-
-            <div>
-                <BaseButton></BaseButton>
+            <div class="flex items-center">
+                <BaseButton text="Clear Filters" @click="clearFilters" />
             </div>
         </div>
 
@@ -282,17 +350,8 @@ onMounted(async () => {
                     <TableSkeleton :columns="reservationSkeletonColumns" :rows="1" />
                 </tbody>
 
-                <!--not found-->
-                <tbody v-if="filteredReservation.length === 0">
-                    <tr>
-                        <td colspan="9" class="py-8 text-center text-gray-400">
-                            No reservations match your current filters.
-                        </td>
-                    </tr>
-                </tbody>
-
                 <!-- Data -->
-                <tbody v-else-if="reservations.length">
+                <tbody v-else-if="reservations.length > 0">
                     <tr v-for="reservation in filteredReservation" :key="reservation.id"
                         class="border-b border-gray-100">
                         <td class="px-4 py-3">
@@ -334,6 +393,14 @@ onMounted(async () => {
                                 class="rounded-lg p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
                                 <FontAwesomeIcon :icon="faEllipsis" />
                             </button>
+                        </td>
+                    </tr>
+                </tbody>
+
+                <tbody v-else-if="isFiltering">
+                    <tr>
+                        <td colspan="9" class="py-8 text-center text-gray-400">
+                            No reservations match your current filters.
                         </td>
                     </tr>
                 </tbody>

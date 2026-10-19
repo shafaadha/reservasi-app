@@ -1,13 +1,19 @@
 <script setup>
-import { faCircleCheck, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
-import { info } from "autoprefixer";
 import { computed } from "vue";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import {
+    faCircleCheck,
+    faCircleInfo,
+    faCircleExclamation,
+    faCircleXmark,
+} from "@fortawesome/free-solid-svg-icons";
 
-defineProps({
+const props = defineProps({
     type: {
         type: String,
         default: "success",
+        validator: (value) =>
+            ["success", "error", "warning", "info"].includes(value),
     },
     title: {
         type: String,
@@ -19,33 +25,42 @@ defineProps({
     },
 });
 
-const icons = {
-    success: faCircleCheck,
-    info: faCircleInfo,
+const alertConfig = {
+    success: {
+        icon: faCircleCheck,
+        class: "border-green-500 bg-green-50 text-green-700",
+    },
+    error: {
+        icon: faCircleXmark,
+        class: "border-red-500 bg-red-50 text-red-700",
+    },
+    warning: {
+        icon: faCircleExclamation,
+        class: "border-amber-500 bg-amber-50 text-amber-700",
+    },
+    info: {
+        icon: faCircleInfo,
+        class: "border-blue-400 bg-blue-50 text-blue-700",
+    },
 };
 
-const currentIcon = computed(() => icons[props.type]);
+const currentAlert = computed(
+    () => alertConfig[props.type] ?? alertConfig.info
+);
 </script>
 
 <template>
-    <div
-        class="flex flex-row rounded-lg border p-4"
-        :class="{
-            'border-green-600 bg-green-50 text-green-700': type === 'success',
-            'border-red-500 bg-rose-100': type === 'error',
-            'border-amber-500 bg-orange-100': type === 'warning',
-            'border-blue-400 bg-blue-50': type === 'info',
-        }"
-    >
-        <div>
-            <FontAwesomeIcon :icon="currentIcon" />
-        </div>
-        <div class="flex flex-col gap-4">
-            <p v-if="title" class="font-semibold text-gray-800">
+    <div class="flex items-start gap-3 rounded-lg border p-4" :class="currentAlert.class" role="alert">
+        <FontAwesomeIcon :icon="currentAlert.icon" class="mt-1 shrink-0" />
+
+        <div class="flex flex-col gap-1">
+            <p v-if="title" class="font-semibold">
                 {{ title }}
             </p>
 
-            <p class="text-slate-500">{{ message }}</p>
+            <p class="text-sm">
+                {{ message }}
+            </p>
         </div>
     </div>
 </template>
