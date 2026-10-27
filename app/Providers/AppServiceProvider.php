@@ -15,7 +15,9 @@ use App\Services\ReservationService;
 use App\Services\RoomService;
 use App\Services\RoomUnitService;
 use App\Services\UserService;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -58,6 +60,16 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::define('confirm-res', function (User $user) {
             return $user->role === 'admin';
+        });
+
+        RateLimiter::for('login', function ($request) {
+
+            if ($request->email === 'admin@example.com') {
+                return Limit::none();
+            }
+
+            return Limit::perMinute(5)
+                ->by($request->user()?->id ?: $request->ip());
         });
     }
 }

@@ -33,7 +33,8 @@ import BaseSelect from '../../component/common/BaseSelect.vue';
                         <label class="block text-sm font-medium text-gray-700">
                             Check-In
                         </label>
-                        <BaseInput v-model="checkin" placeholder=now type="date" />
+                        <input v-model="checkin" type="date" id="checkin" :min="today"
+                            class="border border-stone-200 rounded-lg px-3 py-2.5 text-sm text-stone-700 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-colors" />
                     </div>
 
                     <div class="space-y-2">
@@ -41,7 +42,8 @@ import BaseSelect from '../../component/common/BaseSelect.vue';
                             Check-Out
                         </label>
                         <div>
-                            <BaseInput v-model="checkout" placeholder="" type="date" />
+                            <input v-model="checkout" type="date" id="checkout" :min="minCheckout"
+                                class="border border-stone-200 rounded-lg px-3 py-2.5 text-sm text-stone-700 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-colors" />
                         </div>
                     </div>
 
@@ -50,7 +52,7 @@ import BaseSelect from '../../component/common/BaseSelect.vue';
                             Adult
                         </label>
                         <div>
-                            <BaseInput v-model="checkout" placeholder="" type="number" />
+                            <QuantityPicker v-model="guest" :min-value="1" :max-value="10"></QuantityPicker>
                         </div>
                     </div>
 
